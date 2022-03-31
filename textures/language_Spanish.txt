@@ -1,0 +1,279 @@
+
+
+Translation file for Ben's Game
+line 0
+
+[El juego de Ben]
+line 1
+
+[¡Excelente! ¡Sigue adelante!]
+line 2
+
+[No tengas miedo.]
+line 3
+
+[Saborea cada día como si fuera un caramelo.]
+line 4
+
+[Tienes que ser fuerte.]
+line 5
+
+[Todos los días pasa algo divertido.]
+line 6
+
+[No te olvides de tomar las pastillas.]
+line 7
+
+[Dormir la siesta todas las tardes es fantástico.]
+line 8
+
+[Borra los pensamientos tristes.]
+line 9
+
+[Si te duele el estómago, prepárate un licuado.]
+line 10
+
+[No te detengas justo ahora que estás progresando.]
+line 11
+
+[¡Sigue adelante! ¡Vamos con el zoom!]
+line 12
+
+[¿Tu cabello desapareció? ¡Eres un mago!]
+line 13
+
+[¡Etaruc odipar!]
+line 14
+
+[Eres un genio.]
+line 15
+
+[¡Bienvenidos al juego de Ben!]
+line 16
+
+[En este juego se lucha contra el cáncer. Tu personaje es muy valiente. Tiene muchos amigos y todas las herramientas que necesita para ganar.]
+line 17
+
+[Si quieres más instrucciones visita el sitio  www.makewish.org/ben]
+line 18
+
+[Encuentra siete escudos]
+line 19
+
+[Hay SIETE ESCUDOS para coleccionar. Los escudos te protegen de los efectos desagradables del tratamiento.]
+line 20
+
+[Varicela]
+line 21
+
+[Fiebre]
+line 22
+
+[Hemorragia]
+line 23
+
+[Caída del cabello]
+line 24
+
+[Vómito]
+line 25
+
+[Sarpullido]
+line 26
+
+[Resfriados]
+line 27
+
+[Derrota a los monstruos]
+line 28
+
+[Cada escudo es defendido por un MONSTRUO que causa MUTACIONES en tus CÉLULAS.]
+line 29
+
+[Mantenerse fuerte]
+line 30
+
+[Tu héroe recibe:
+
+       SALUD del hospital
+
+       MUNICIONES de la farmacia
+
+       APOYO de las personas que lo quieren.
+
+Si tropiezas con una CÉLULA MUTANTE pierdes SALUD. Para recuperarte vuela a la BURBUJA DE SALUD que está en la esquina de la pantalla.]
+line 31
+
+[Dificultades]
+line 32
+
+[En este juego las barreras eléctricas se llaman DIFICULTADES. Si las tocas TE DESANIMAS.]
+line 33
+
+[Armas y municiones]
+line 34
+
+[En el juego hay ARMAS que flotan dentro de burbujas. Para tomar un arma tienes que chocar contra la burbuja.]
+line 35
+
+[¡Personaliza el juego de Ben!]
+line 36
+
+[El personaje se puede parecer a lo que tú quieras: a ti, a tu mascota, a tu muñeca, a una nave espacial. Puede que necesites ayuda de un adulto para crear un personaje. Busca la carpeta de 'texturas' y rellena los dibujos. Si quieres saber cómo ponerles detalles a tu personaje, visita el sitio www.makewish.org/ben]
+line 37
+
+[Make-A-Wish]
+line 38
+
+[Cómo se juega]
+line 39
+
+[¡Gracias!]
+line 40
+
+[Opciones]
+line 41
+
+[Mensaje de Ben]
+line 42
+
+[Salir]
+line 43
+
+[Un jugador]
+line 44
+
+[Dos jugadores]
+line 45
+
+[Retroceder]
+line 46
+
+[Jugar]
+line 47
+
+[Empezar un juego nuevo]
+line 48
+
+[Retoma el juego donde lo abandonaste]
+line 49
+
+[Sí, hasta pronto.]
+line 50
+
+[¡No! ¡No dejes de jugar!]
+line 51
+
+[Seguir]
+line 52
+
+[San Francisco, California]
+line 53
+
+[Fundación Make-A-Wish]
+line 54
+
+[Este juego se hizo posible cuando Ben y Eric se conocieron a través de la Fundación Make-A-Wish de San Francisco, California.
+
+Make-a-Wish convierte en realidad los deseos de niños que tienen graves problemas de salud. Tomar dosis de esperanza, fuerza y alegría les ayuda a salir adelante.
+
+¿Te divertiste con el Juego de Ben? Te invitamos a hacer una donación a Make-A-Wish en los enlaces que aparecen debajo. Así podrán cumplirse los deseos de otros niños como Ben.]
+line 55
+
+[Estos botones te llevan a las páginas de Make-A-Wish.]
+line 56
+
+[Hacer una donación]
+line 57
+
+[Visitar Make-A-Wish]
+line 58
+
+[La página del juego de Ben]
+line 59
+
+[¡Mensaje de Ben!]
+line 60
+
+[Opciones del juego]
+line 61
+
+[Abrir el juego de Ben en una ventana la próxima vez]
+line 62
+
+[Gráfica de alta calidad (a veces es más lento)]
+line 63
+
+[Poner efectos sonoros]
+line 64
+
+[Ponerle una voz al personaje]
+line 65
+
+[Ondulaciones de las células]
+line 66
+
+[Salvo mis progresos]
+line 67
+[Ben y Eric quieren
+AGRADECER
+a las siguientes personas]
+
+line 68
+[¿De veras
+prefieres salir?]
+line 69
+
+[Versión: Release 1 (6/29/04)]
+line 70
+[¡Bienvenidos al juego de Ben!
+Si deseas recibir una versión actualizada, enviarnos comentarios o indicarnos errores del juego
+visita el sitio www.makewish.org/ben]
+
+line 71
+
+[Nuevo juego]
+line 72
+
+[Sigue jugando]
+line 73
+
+[font2Ar24]
+
+line 74
+[font2Ar24000]
+
+line 75
+[----Checkpoint1----]
+
+76 [¡Gracias!]
+
+77 [COMPLETE]
+
+78 [¡Juega!]
+
+79 [Nivel
+fácil]
+
+80 [Nivel
+medio]
+
+81 [Nivel
+difícil]
+
+82 [¡Ganaste!]
+
+83 [Jugador 1]
+
+84 [Jugador 2]
+
+85 [Mover]
+
+86 [Frenar]
+
+87 [Disparar]
+
+88 [Cambiar de arma]
+
+89 [Enfocar mejor]
+
