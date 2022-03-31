@@ -16,7 +16,10 @@
 \******************************************************************************/
 
 
-#include <glut.h>
+#include <stdint.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+#include <GL/gl.h>
 #include "genincludes.h"
 
 #include <stdio.h>

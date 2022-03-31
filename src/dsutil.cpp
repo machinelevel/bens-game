@@ -1,3 +1,4 @@
+#if 0
 //-----------------------------------------------------------------------------
 // File: DSUtil.cpp
 //
@@ -1643,3 +1644,4 @@ HRESULT CWaveFile::Write( UINT nSizeToWrite, BYTE* pbSrcData, UINT* pnSizeWrote 
 
 
 
+#endif

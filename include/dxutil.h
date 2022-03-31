@@ -1,3 +1,4 @@
+#if 0
 //-----------------------------------------------------------------------------
 // File: DXUtil.h
 //
@@ -177,3 +178,4 @@ __inline int GetScrollPos(HWND hWnd, int nBar)
 
 
 #endif // DXUTIL_H
+#endif

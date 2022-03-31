@@ -1,3 +1,4 @@
+#if 0
 /* 
  * 	MacUtils.h
  *
@@ -20,3 +21,4 @@ extern uint16 mac_count_folder_contents(char *inFolderName);
 Boolean mac_get_filename_by_index(char *inFolderName, char *inFileName, uint16 inFileIndex);
 
 void mac_LaunchURL(char *urlStr);
+#endif

@@ -65,6 +65,12 @@ enum {
 	SOUND_HOWMANY
 };
 
+struct SdlSound
+{
+	int placeholder;
+};
+#define SOUNDTYPE SdlSound
+
 #if WIN32
 // Include the windows headers
 #include "dsutil.h"

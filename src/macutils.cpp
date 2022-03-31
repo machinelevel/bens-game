@@ -1,3 +1,4 @@
+#if 0
 /* 
  * 	MacUtils.cpp
  *  Copyright © 2004 Make-a-Wish Foundation.  All Rights Reserved.
@@ -948,3 +949,4 @@ FSMakeFSRef(
 	return status;
 }
 
+#endif

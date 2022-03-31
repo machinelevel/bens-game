@@ -1,3 +1,4 @@
+#if 0
 /*
  *	macsound.cpp
  *
@@ -223,3 +224,5 @@ void playSound2D(int32 id, float volume, float pitch, float pan)
 	mac_sound_play(sampleID, ivolume, (Fixed) (pitch * fixed1), pan);
 	return;
 }
+
+#endif

@@ -6,7 +6,7 @@ CC = g++
 
 #COMPILER_FLAGS specifies the additional compilation options we're using
 # -w suppresses all warnings
-COMPILER_FLAGS = -Iinclude
+COMPILER_FLAGS = -w -Iinclude -DSDL2
 
 #LINKER_FLAGS specifies the libraries we're linking against
 LINKER_FLAGS = -lSDL2
