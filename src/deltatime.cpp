@@ -12,17 +12,6 @@
 #include "upmath.h"
 #include "deltatime.h"
 
-#ifdef _WIN32
-#define GLUT_TIMER_BROKEN	1
-#else
-#define GLUT_TIMER_BROKEN	0
-#endif
-
-#if GLUT_TIMER_BROKEN
-#include <windows.h>
-#include <mmsystem.h>
-#endif
-
 double	NowTime = 0.0f;
 double	LastTime = 0.0f;
 double	DeltaTime = 1.0f;
@@ -34,11 +23,7 @@ void UpdateDeltaTime(void)
 {
 	LastTime = NowTime;
 
-#if GLUT_TIMER_BROKEN
-	NowTime = ((double)timeGetTime()) * 0.001f;
-#else
-	NowTime = ((double)glutGet(GLUT_ELAPSED_TIME)) / (double)1000;
-#endif
+	NowTime = ((double)SDL_GetTicks()) * 0.001f;
 
 	DeltaTime = NowTime - LastTime;
 	if (DeltaTime != 0.0f) {

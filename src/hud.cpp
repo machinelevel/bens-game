@@ -523,11 +523,6 @@ void hudDrawGraph(void)
 	float	w = 3, h = 30, d;
 	int32	i, index, val, stripe;
 	float	wScale, hScale;
-	float	win_width, win_height;
-	
-	win_width  = glutGet(GLUT_WINDOW_WIDTH);
-	win_height = glutGet(GLUT_WINDOW_HEIGHT);
-	
 
 	if (1) {
 		gBadHistoryTimer += 1.0f * DeltaTime;
@@ -670,11 +665,6 @@ void hudDrawScreenFlash(void)
 
 void hudDraw(void)
 {
-	long	win_width, win_height;
-	
-//	win_width  = glutGet(GLUT_WINDOW_WIDTH);
-//	win_height = glutGet(GLUT_WINDOW_HEIGHT);
-
 	if (gGameMode != GAME_MODE_PORT) {
 		hudDrawCompass();
 	}

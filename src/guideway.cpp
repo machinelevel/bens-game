@@ -447,7 +447,9 @@ void DrawGLBird(long flags)
 	glMultMatrixf((float *)m);
 
 	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
-	glutWireTetrahedron();
+
+// @@ convert to SDL, is this used?
+//	glutWireTetrahedron();
 
 	glPopMatrix();
     glPopAttrib();

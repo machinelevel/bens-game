@@ -217,6 +217,8 @@ xxxxxxxx 1   B  Final HUD
 
 char	*MainWindowTitle = TRANSLATE(TXT_Bens_Game);
 int32	MainWindowID = -1;
+SDL_Window* main_sdl_window = NULL;
+
 static int32 CurrentGlutMouseButtons = 0;
 int32	MainWindowSize[2] = {640, 480};
 bool	doneFlag = false;

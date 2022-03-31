@@ -798,7 +798,7 @@ void *tsuGetMemFile(char *fileName, uint32 *psize)
 			if (psize) *psize = tag->dataSize;
 			return((void*)(tag + 1));
 		}
-		tag = (tsuTag*)((tag->dataSize + sizeof(tsuTag) + (uint32)tag + 3) & (~3));
+		tag = (tsuTag*)((tag->dataSize + sizeof(tsuTag) + (size_t)tag + 3) & (~3));
 	}
 	if (psize) *psize = 0;
 	return(NULL);
@@ -851,7 +851,7 @@ void tsuLoad(void)
 				tsuEncrypt(data, tag->dataSize);
 				check = tsuChecksum(data, tag->dataSize);
 				if (tag->dataCheck != check) exit(1);
-				tag = (tsuTag*)((tag->dataSize + sizeof(tsuTag) + (uint32)tag + 3) & (~3));
+				tag = (tsuTag*)((tag->dataSize + sizeof(tsuTag) + (size_t)tag + 3) & (~3));
 
 #if MAC_BUILD
 				// ENDIAN we hate thee

@@ -25,6 +25,8 @@
 #include "random.h"
 #include "sound.h"
 
+extern SDL_Window* main_sdl_window;
+
 void drawFloorSquare(float x, float y, float z, float size)
 {
     glBegin(GL_LINE_LOOP);
@@ -63,14 +65,13 @@ void AppDrawText(GLuint x, GLuint y, GLuint scale, char* format, ...)
     va_list args;
     char buffer[255], *p;
     GLfloat font_scale = 119.05F + 33.33F;
-	long	win_width, win_height;
+	int	win_width, win_height;
 	
 	va_start(args, format);
     vsprintf(buffer, format, args);
     va_end(args);
 
-	win_width  = glutGet(GLUT_WINDOW_WIDTH);
-    win_height = glutGet(GLUT_WINDOW_HEIGHT);
+	SDL_GetWindowSize(main_sdl_window, &win_width, &win_height);
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
@@ -89,9 +90,12 @@ void AppDrawText(GLuint x, GLuint y, GLuint scale, char* format, ...)
 
     glScalef(scale/font_scale, scale/font_scale, scale/font_scale);
 
+#if 0
+@@ convert to SDL? Is this used?
     for(p = buffer; *p; p++)
-	glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, *p);
-  
+		glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, *p);
+#endif
+
     glPopAttrib();
 
     glPopMatrix();
@@ -346,6 +350,6 @@ void DrawMainWindow(void)
 	}
 
 	PostDraw();
-	glutSwapBuffers();
+	SDL_GL_SwapWindow(main_sdl_window);
 }
 

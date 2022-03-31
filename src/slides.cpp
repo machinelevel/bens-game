@@ -43,6 +43,8 @@
 #include "macutils.h"
 #endif
 
+extern SDL_Window* main_sdl_window;
+
 extern bool doneFlag;
 
 Slides		*gSlides = NULL;
@@ -969,8 +971,8 @@ void Slides::ScanPlayerImages(void)
 
 int Slides::GetRectButton(int *list, int x, int y, int *secondaryList)
 {
-	float	win_width  = glutGet(GLUT_WINDOW_WIDTH);
-	float	win_height = glutGet(GLUT_WINDOW_HEIGHT);
+	int win_width, win_height;
+	SDL_GetWindowSize(main_sdl_window, &win_width, &win_height);
 	float	fx = x / (win_width / 640.0f);
 	float	fy = y / (win_height / 480.0f);
 	int		pos = 0;
@@ -1267,9 +1269,9 @@ void Slides::StartAlertSlide(int whichSlide)
 	}
 }
 
-char	*donationURL = "http://www.wish.org/cgi-bin/welcome.pl?s=04BEN&t=www.wish.org/home/giving-shopping/giving.htm";
-char	*wishURL = "http://www.makewish.org";
-char	*benURL = "http://www.makewish.org/ben";
+char	*donationURL = "https://secure2.wish.org/site/SPageServer?pagename=donate_today&chid=025-000";
+char	*wishURL = "https://wish.org/greaterbay";
+char	*benURL = "https://en.wikipedia.org/wiki/Ben's_Game";
 
 #ifdef WIN32
 void mac_LaunchURL(char *url)
@@ -1308,15 +1310,15 @@ void Slides::Click(int x, int y)
 						break;
 					case BUTTON_ID_ALERT_WEB_DONATION_SITE:
 						//system(donationURL);
-						mac_LaunchURL(donationURL);
+						//mac_LaunchURL(donationURL);
 						break;
 					case BUTTON_ID_ALERT_WEB_MAKEWISH_SITE:
 						//system(wishURL);
-						mac_LaunchURL(wishURL);
+						//mac_LaunchURL(wishURL);
 						break;
 					case BUTTON_ID_ALERT_WEB_BENSGAME_SITE:
 						//system(benURL);
-						mac_LaunchURL(benURL);
+						//mac_LaunchURL(benURL);
 						break;
 					default:
 						break;
@@ -1703,8 +1705,8 @@ void Slides::MousePos(int x, int y)
 	}
 
 	if (gIntroStage == INTRO_SLIDE_ALL_DONE) {
-		float	win_width  = glutGet(GLUT_WINDOW_WIDTH);
-		float	win_height = glutGet(GLUT_WINDOW_HEIGHT);
+		int win_width, win_height;
+		SDL_GetWindowSize(main_sdl_window, &win_width, &win_height);
 		float	fx = x / (win_width / 640.0f);
 		float	fy = y / (win_height / 480.0f);
 		pfSetVec3(gFireFlies->mCenter, fx, fy, 0);
@@ -2435,8 +2437,8 @@ void Slides::Draw(void)
 
 	float	px1, px2;
 
-	win_width  = glutGet(GLUT_WINDOW_WIDTH);
-	win_height = glutGet(GLUT_WINDOW_HEIGHT);
+	SDL_GetWindowSize(main_sdl_window, &win_width, &win_height);
+
 	win_aspect = (float)win_width/(float)win_height;
 	aspect640x480 = 640.0f/480.0f;
 
@@ -3117,8 +3119,8 @@ void Slides::NewSplat(float x, float y, float size)
 {
 	int		i, id = -1;
 	Splat	*sp;
-	float	win_width  = glutGet(GLUT_WINDOW_WIDTH);
-	float	win_height = glutGet(GLUT_WINDOW_HEIGHT);
+	int win_width, win_height;
+	SDL_GetWindowSize(main_sdl_window, &win_width, &win_height);
 	float	fx = x / (win_width / 640.0f);
 	float	fy = y / (win_height / 480.0f);
 

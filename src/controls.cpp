@@ -198,7 +198,7 @@ pfVec3	CameraSwingVeloc = {0.0f, 0.0f, 0.0f};
 
 void HandleMouse(int button, int state, int x, int y)
 {
-	if (state == GLUT_DOWN) {
+	if (state == 1) {
 		if (gGameMode == GAME_MODE_SLIDES) {
 			gSlides->Click(x, y);
 		} else if (gGameMode == GAME_MODE_PLAY || gGameMode == GAME_MODE_PORT) {
