@@ -186,6 +186,7 @@ xxxxxxxx 1   B  Final HUD
 #include <stdint.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+#include <SDL2/SDL_image.h>
 #include <GL/gl.h>
 #include <stdarg.h>
 #include <time.h>
@@ -215,11 +216,11 @@ xxxxxxxx 1   B  Final HUD
 #include "macutils.h"
 #endif
 
-char	*MainWindowTitle = TRANSLATE(TXT_Bens_Game);
-int32	MainWindowID = -1;
+char	    *main_window_title = TRANSLATE(TXT_Bens_Game);
+uint64_t    main_sdl_window_flags = SDL_WINDOW_OPENGL;
 SDL_Window* main_sdl_window = NULL;
 
-static int32 CurrentGlutMouseButtons = 0;
+static int32 CurrentMouseButtons = 0;
 int32	MainWindowSize[2] = {640, 480};
 bool	doneFlag = false;
 //int32	MainWindowSize[2] = {800, (800*9)/16};
@@ -292,7 +293,8 @@ void InitApplication(void)
 
 void ShutdownApplication(int exitError)
 {
-	glutDestroyWindow(MainWindowID);
+	SDL_DestroyWindow(main_sdl_window);
+	SDL_Quit();
 	
 #if MAC_BUILD
 	mac_teardown();
@@ -308,7 +310,6 @@ void HandleIdle(void)
 	int		i;
 	bool	wonAll;
 
-	glutForceJoystickFunc();
 	UpdateDeltaTime();
 
 	for (i = 0; i < 255; i++) {
@@ -393,7 +394,6 @@ void HandleIdle(void)
 			}
 		}
 	}
-	glutPostRedisplay();
 
 	if (doneFlag) 
 	{
@@ -424,16 +424,16 @@ void mainSpecialPress(int key, int x, int y)
 {
 	switch (key) {
 //	  case 0x1b: mainShutDown(); break; /**** esc to quit ****/
-	case GLUT_KEY_LEFT:
+	case SDLK_LEFT:
 		ControlPressKey(0xe2, TRUE); break;
 
-	case GLUT_KEY_RIGHT:
+	case SDLK_RIGHT:
 		ControlPressKey(0xe1, TRUE); break;
 
-	case GLUT_KEY_UP:
+	case SDLK_UP:
 		ControlPressKey(0xe4, TRUE); break;
 
-	case GLUT_KEY_DOWN:
+	case SDLK_DOWN:
 		ControlPressKey(0xe3, TRUE); break;
 
 //	  default: ControlPressKey(key+100, TRUE); break;
@@ -446,16 +446,16 @@ void mainSpecialPress(int key, int x, int y)
 void mainSpecialRelease(int key, int x, int y)
 {
 	switch (key) {
-	case GLUT_KEY_LEFT:
+	case SDLK_LEFT:
 		ControlPressKey(0xe2, FALSE); break;
 
-	case GLUT_KEY_RIGHT:
+	case SDLK_RIGHT:
 		ControlPressKey(0xe1, FALSE); break;
 
-	case GLUT_KEY_UP:
+	case SDLK_UP:
 		ControlPressKey(0xe4, FALSE); break;
 
-	case GLUT_KEY_DOWN:
+	case SDLK_DOWN:
 		ControlPressKey(0xe3, FALSE); break;
 
 //	  default: ControlPressKey(key+100, TRUE); break;
@@ -523,7 +523,73 @@ rrr=0;
 	ControlJoystickData(buttonMask,xxx,yyy,zzz,rrr);
 }
 
-void main(int argc, char **argv)
+void main_event_loop()
+{
+
+// 	glutSetWindow(MainWindowID);
+// 	glutIgnoreKeyRepeat(GLUT_DEVICE_IGNORE_KEY_REPEAT);
+// 	glutIdleFunc(HandleIdle);
+// 	glutDisplayFunc(DrawMainWindow);
+// 	glutKeyboardFunc(mainKeyboardPress);
+// 	glutKeyboardUpFunc(mainKeyboardRelease);
+// 	glutSpecialFunc(mainSpecialPress);
+// 	glutSpecialUpFunc(mainSpecialRelease);
+// 	glutMouseFunc(mainMouseClick);
+// 	glutMotionFunc(mainMouseMotion);
+// 	glutPassiveMotionFunc(mainMouseMotion);
+
+// #ifdef WIN32
+// 	glutJoystickFunc(mainJoystick, -1);
+// #endif
+
+// 	glutReshapeFunc(mainReshape);
+// 	glutShowWindow();
+
+
+  bool done = false;
+  while (!done)
+  {
+    SDL_Event Event;
+    while (SDL_PollEvent(&Event))
+    {
+      if (Event.type == SDL_KEYDOWN)
+      {
+      	int x = 0;
+      	int y = 0;
+      	int key = Event.key.keysym.sym;
+      	mainKeyboardPress(key, x, y);
+      }
+      else if (Event.type == SDL_KEYUP)
+      {
+      	int x = 0;
+      	int y = 0;
+      	int key = Event.key.keysym.sym;
+      	mainKeyboardRelease(key, x, y);
+      }
+      else if (Event.type == SDL_QUIT)
+      {
+        done = true;
+      }
+      DrawMainWindow();
+      HandleIdle();
+    }
+
+    // glViewport(0, 0, WinWidth, WinHeight);
+    // glClearColor(0.2f, 0.0f, 0.2f, 1.0f);
+    // glClear(GL_COLOR_BUFFER_BIT);
+
+    // glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
+    // glBegin(GL_TRIANGLES);
+    // glVertex3f(-1.0f, -1.0f, 0.0f);
+    // glVertex3f(-1.0f,  1.0f, 0.0f);
+    // glVertex3f( 1.0f,  1.0f, 0.0f);
+    // glEnd();
+
+    SDL_GL_SwapWindow(main_sdl_window);
+  }
+}
+
+int main(int argc, char **argv)
 {
 #ifdef WIN32
 	checkDirectXVersion();
@@ -534,44 +600,42 @@ void main(int argc, char **argv)
 	{
 #endif
 
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-	glutInitWindowPosition(100, 100);
-	glutInitWindowSize(MainWindowSize[0], MainWindowSize[1]);
+    if (SDL_Init(SDL_INIT_TIMER|SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_EVENTS) != 0)
+    {
+        SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
+        return 1;
+    }
+    IMG_Init(IMG_INIT_JPG);
 
-	MainWindowID = glutCreateWindow(MainWindowTitle);
+	main_sdl_window = SDL_CreateWindow(main_window_title, 0, 0, MainWindowSize[0], MainWindowSize[1], main_sdl_window_flags);
+    if (!main_sdl_window)
+    {
+        SDL_Log("Unable to create window: %s", SDL_GetError());
+        return 1;
+    }
+	SDL_GLContext Context = SDL_GL_CreateContext(main_sdl_window);
+
 	LoadOptions();
 	SaveOptions();
 	ReadSaves();
 	WriteSaves();
 	if (!gOptionLaunchInWindow) {
-		glutFullScreen();
+		SDL_SetWindowFullscreen(main_sdl_window, main_sdl_window_flags | SDL_WINDOW_FULLSCREEN_DESKTOP);
 	}
 	//SetPriorityClass(GetCurrentProcess(), ABOVE_NORMAL_PRIORITY_CLASS);
 
-	glutSetWindow(MainWindowID);
-	glutIgnoreKeyRepeat(GLUT_DEVICE_IGNORE_KEY_REPEAT);
-	glutIdleFunc(HandleIdle);
-	glutDisplayFunc(DrawMainWindow);
-	glutKeyboardFunc(mainKeyboardPress);
-	glutKeyboardUpFunc(mainKeyboardRelease);
-	glutSpecialFunc(mainSpecialPress);
-	glutSpecialUpFunc(mainSpecialRelease);
-	glutMouseFunc(mainMouseClick);
-	glutMotionFunc(mainMouseMotion);
-	glutPassiveMotionFunc(mainMouseMotion);
-
-#ifdef WIN32
-	glutJoystickFunc(mainJoystick, -1);
-#endif
-
-	glutReshapeFunc(mainReshape);
-	glutShowWindow();
 	InitApplication();
-	glutMainLoop();
+	main_event_loop();
+
+	glFlush();
+	glFinish();
+	SDL_DestroyWindow(main_sdl_window);
+	IMG_Quit();
+	SDL_Quit();
 
 #if MAC_BUILD
 	}
 #endif
+	return 0;
 }
 

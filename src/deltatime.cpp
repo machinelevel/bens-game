@@ -1,6 +1,7 @@
 /************************************************************\
 	deltatime.c
 \************************************************************/
+#if 0
 
 #include <stdio.h>
 #include <stdint.h>
@@ -38,3 +39,4 @@ void UpdateDeltaTime(void)
 //	printf("Now = %f, delta = %f, fr = %f\n", (float)NowTime, (float)DeltaTime, (float)LastFrameRate);
 }
 
+#endif

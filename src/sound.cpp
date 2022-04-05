@@ -154,6 +154,47 @@ void initAllSounds(void)
 	}
 }
 
+SOUNDTYPE *loadSound(char *name)
+{
+	int32	result = 0;
+	SOUNDTYPE* snd = new SOUNDTYPE;
+	char	*tsuptr;
+	uint32	tsusize;
+	unsigned char	*pdata;
+	unsigned long	size;
+	int		repeat;
+
+	// if (!gSoundMgr) {
+	// 	HWND	hw = NULL;
+	// 	hw = GetForegroundWindow();
+	// 	gSoundMgr = new CSoundManager;
+	// 	hr = gSoundMgr->Initialize(hw, DSSCL_PRIORITY);
+	// 	hr = gSoundMgr->SetPrimaryBufferFormat( 2, 22050, 16 );
+	// }
+	// if (!gSoundMgr) return(NULL);
+
+	if ((name == NULL) || (name[0] == 0)) return(NULL);
+
+	if (gRapidFire) repeat = 10;
+	else repeat = 2;
+
+	tsuMarkFile(name);
+	tsuptr = (char*)tsuGetMemFile(name, &tsusize);
+	if (tsuptr) {
+//		format = (LPWAVEFORMATEX)(tsuptr+20);
+		pdata = (unsigned char*)(tsuptr+40);
+		int	slop = 40;	//// try to reduce the click
+		size = tsusize-(40+slop);
+		// hr = gSoundMgr->CreateFromMemory(&snd, pdata, size, format, DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY, GUID_NULL, repeat);//, DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY | DSBCAPS_CTRLPAN);
+	} else {
+		// hr = gSoundMgr->Create(&snd, name, DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY, GUID_NULL, repeat);//, DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY | DSBCAPS_CTRLPAN);
+	}
+	return(snd);
+}
+
+void playSound2D(int32 id, float volume, float pitch, float pan)
+{
+}
 
 #ifdef WIN32
 static CSoundManager			*gSoundMgr = NULL;

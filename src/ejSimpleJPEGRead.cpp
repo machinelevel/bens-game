@@ -1,6 +1,44 @@
 /**** ej's simple jpeg read code ****/
 
 #include <stdio.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+
+
+bool ejSimpleJPEGRead(FILE *inputFile, void *inputMem, int inputMemSize, void **pOutData, unsigned int *pOutWidth, unsigned int *pOutHeight, unsigned int *pOutBPP)
+{
+	SDL_RWops* rwops = NULL;
+	SDL_Surface* image = NULL;
+
+	if (inputMem)
+		rwops = SDL_RWFromMem(inputMem, inputMemSize);
+	else
+		rwops = SDL_RWFromFP(inputFile, SDL_FALSE);
+	image = IMG_Load_RW(rwops, 0);
+
+	if (image)
+	{
+		SDL_LockSurface(image); // todo: unlock this
+		*pOutWidth = image->w;
+		*pOutHeight = image->h;
+		*pOutBPP = image->format->BitsPerPixel;
+		size_t total_bytes = image->h * image->pitch;
+		*pOutData = malloc(total_bytes);
+		memcpy(*pOutData, image->pixels, total_bytes);
+		SDL_UnlockSurface(image);
+		SDL_FreeSurface(image);
+		return true;
+	}
+	return false;
+	// extern SDL_Window* main_sdl_window;
+	// SDL_Renderer* renderer = SDL_GetRenderer(main_sdl_window);
+//   SDL_Textue* texture = IMG_LoadTexture(renderer, inputFile);
+
+}
+
+
+
+#if 0
 #include <malloc.h>
 
 extern "C" {
@@ -110,3 +148,4 @@ bool ejSimpleJPEGRead(FILE *inputFile, void *inputMem, int inputMemSize, void **
 	if (pOutData)	*pOutData = buffer;
 	return(true);
 }
+#endif
