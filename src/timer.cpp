@@ -24,7 +24,7 @@ float	gTimeScale = 1.0f;
 
 uint32 GetMillisecondTimer(void)
 {
-	return ((double)SDL_GetTicks()) * 0.001f;
+	return (double)SDL_GetTicks();
 }
 
 void UpdateDeltaTime(void)

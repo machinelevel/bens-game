@@ -570,9 +570,10 @@ void main_event_loop()
       {
         done = true;
       }
-      DrawMainWindow();
-      HandleIdle();
     }
+//printf("time: %f\n", NowTime);
+	DrawMainWindow();
+	HandleIdle();
 
     // glViewport(0, 0, WinWidth, WinHeight);
     // glClearColor(0.2f, 0.0f, 0.2f, 1.0f);
