@@ -362,10 +362,7 @@ void UseLibTexture(long id, bool refresh)
 			int internalFormat = GL_RGBA4;
 			if (tp->loadFlags & TLF_ALPHA4) internalFormat = GL_ALPHA4;
 			if (tp->loadFlags & TLF_ALPHA8) internalFormat = GL_ALPHA8;
-
-#ifdef WIN32
 			if (tp->loadFlags & TLF_RGB8) internalFormat = GL_RGB8;
-#endif
 			
 			if (mipOK && (tp->loadFlags & TLF_MIP)) {
 				gluBuild2DMipmaps(GL_TEXTURE_2D, internalFormat, tp->width, tp->height, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid *)(tp->image));
@@ -492,21 +489,12 @@ void getMaskImage(char *name, uint32 *base, int32 width, int32 height)
 
 		dst = base;
 		src = base2;
-		/**** Now copt the alpha over ****/
-#ifdef WIN32
+		/**** Now copy the alpha over ****/
 		for (i = 0; i < count; i++) {
-			*dst = ((*dst) & 0x00ffffff) | (((*src) & 0x000000ff) << 24);
+			((uint8_t*)dst)[3] = ((uint8_t*)src)[0];
 			dst++;
 			src++;
 		}
-#else
-		/*** ENDIAN WE HATE THEE ****/
-		for (i = 0; i < count; i++) {
-			*dst = ((*dst) & 0xffffff00) | (((*src) & 0xff000000) >> 24);
-			dst++;
-			src++;
-		}
-#endif
 		/**** delete the mask image here ****/
 		free(base2);
 	}
