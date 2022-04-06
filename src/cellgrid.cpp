@@ -11,7 +11,6 @@
 #include <GL/gl.h>
 #include <string.h>
 #include "genincludes.h"
-#include "umath.h"
 #include "upmath.h"
 #include "camera.h"
 #include "controls.h"

@@ -12,7 +12,6 @@
 #include "guideway.h"
 #include "texture.h"
 #include "draw.h"
-//#include "displacement.h"
 #include "cellgrid.h"
 #include "cellport.h"
 #include "glider.h"

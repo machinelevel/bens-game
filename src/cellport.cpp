@@ -11,7 +11,6 @@
 #include <SDL2/SDL_opengl.h>
 #include <GL/gl.h>
 #include "genincludes.h"
-#include "umath.h"
 #include "upmath.h"
 #include "camera.h"
 #include "controls.h"

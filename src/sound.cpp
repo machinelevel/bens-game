@@ -11,16 +11,11 @@
 #include <GL/gl.h>
 #include <math.h>
 #include "genincludes.h"
-#include "umath.h"
 #include "upmath.h"
 #include "camera.h"
 #include "controls.h"
 #include "timer.h"
 #include "slides.h"
-#ifdef WIN32
-#include "dsutil.h"
-#include "dxutil.h"
-#endif
 #include "sound.h"
 #include "random.h"
 #include "tsufile.h"

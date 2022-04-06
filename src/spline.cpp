@@ -29,9 +29,6 @@
 #include <assert.h>
 
 #include <malloc.h>
-
-
-#include "umath.h"
 #include "upmath.h"
 
 #include "timer.h"

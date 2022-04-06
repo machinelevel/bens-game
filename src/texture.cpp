@@ -11,7 +11,6 @@
 #include <GL/glu.h>
 #include "genincludes.h"
 #include "texture.h"
-#include "tgaloader.h"
 #include "tsufile.h"
 #include "slides.h"
 #include "translation.h"

@@ -197,7 +197,6 @@ xxxxxxxx 1   B  Final HUD
 #include "texture.h"
 #include "draw.h"
 #include "controls.h"
-//#include "displacement.h"
 #include "cellgrid.h"
 #include "CellPort.h"
 #include "glider.h"

@@ -14,11 +14,12 @@
 #endif
 #endif
 
+#define MY_SGN(x)	(((x) < 0) ? -1 : 1)
+#define SETFLAG(val,flag) (val |= (flag))
+#define CLRFLAG(val,flag) (val &= ~(flag))
+
 #include "types.h"
 #include "foxpf.h"
-
-//#define SETFLAG(_v, _f) ((_v) |=  (_f))
-//#define CLRFLAG(_v, _f) ((_v) &= ~(_f))
 
 #endif /* GENINCLUDES_H */
 
