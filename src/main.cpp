@@ -556,15 +556,27 @@ void main_event_loop()
       {
       	int x = 0;
       	int y = 0;
-      	int key = Event.key.keysym.sym;
-      	mainKeyboardPress(key, x, y);
+      	switch (Event.key.keysym.sym)
+      	{
+		case SDLK_LEFT:  ControlPressKey(0xe2, TRUE); break;
+		case SDLK_RIGHT: ControlPressKey(0xe1, TRUE); break;
+		case SDLK_UP:    ControlPressKey(0xe4, TRUE); break;
+		case SDLK_DOWN:  ControlPressKey(0xe3, TRUE); break;
+		default:         mainKeyboardPress(Event.key.keysym.sym, x, y); break;
+		}
       }
       else if (Event.type == SDL_KEYUP)
       {
       	int x = 0;
       	int y = 0;
-      	int key = Event.key.keysym.sym;
-      	mainKeyboardRelease(key, x, y);
+      	switch (Event.key.keysym.sym)
+      	{
+		case SDLK_LEFT:  ControlPressKey(0xe2, FALSE); break;
+		case SDLK_RIGHT: ControlPressKey(0xe1, FALSE); break;
+		case SDLK_UP:    ControlPressKey(0xe4, FALSE); break;
+		case SDLK_DOWN:  ControlPressKey(0xe3, FALSE); break;
+		default:         mainKeyboardRelease(Event.key.keysym.sym, x, y); break;
+		}
       }
       else if (Event.type == SDL_MOUSEBUTTONDOWN)
       {
