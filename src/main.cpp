@@ -566,6 +566,18 @@ void main_event_loop()
       	int key = Event.key.keysym.sym;
       	mainKeyboardRelease(key, x, y);
       }
+      else if (Event.type == SDL_MOUSEBUTTONDOWN)
+      {
+        mainMouseClick(Event.button.button, 1, Event.button.x, Event.button.y);
+      }
+      else if (Event.type == SDL_MOUSEBUTTONUP)
+      {
+        mainMouseClick(Event.button.button, 0, Event.button.x, Event.button.y);
+      }
+      else if (Event.type == SDL_MOUSEMOTION)
+      {
+        mainMouseMotion(Event.motion.x, Event.motion.y);
+      }
       else if (Event.type == SDL_QUIT)
       {
         done = true;
