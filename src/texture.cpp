@@ -449,17 +449,13 @@ void whiteRGB32(uint32 *base, int32 width, int32 height)
 {
 	uint32	i, count = width * height;
 
-#ifdef WIN32
 	for (i = 0; i < count; i++) {
-		*base++ |= 0x00ffffff;
+		// endian-agnostic indexing.
+		((uint8_t*)base)[0] = 255;
+		((uint8_t*)base)[1] = 255;
+		((uint8_t*)base)[2] = 255;
+		base++;
 	}
-#else
-	// ENDIAN WE HATE THEE
-	for (i = 0; i < count; i++) {
-		*base++ |= 0xffffff00;
-	}
-#endif
-
 }
 
 void getMaskImage(char *name, uint32 *base, int32 width, int32 height)
