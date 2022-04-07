@@ -163,6 +163,17 @@ SOUNDTYPE *loadSound(char *name)
 	unsigned long	size;
 	int		repeat;
 
+
+	if (!sound_device_initialized)
+	{
+		sound_device_initialized = true;
+	    if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 512) < 0)
+	    {
+	        printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+	        return NULL;
+	    }
+	}
+
 	if ((name == NULL) || (name[0] == 0)) return(NULL);
 
 	if (gRapidFire) repeat = 10;
@@ -175,17 +186,11 @@ SOUNDTYPE *loadSound(char *name)
 //		int	slop = 40;	//// try to reduce the click
 //		size = tsusize-slop;
 		SDL_RWops* rwops = SDL_RWFromMem(tsuptr, tsusize);
-		SDL_LoadWAV_RW(rwops, 0, &snd->wavSpec, &snd->wavBuffer, &snd->wavLength);
+	    snd->chunk = Mix_LoadWAV_RW(rwops, 0);
 //printf("]] at %d tsu, %p %d\n", __LINE__, snd->wavBuffer, (int)snd->wavLength);
 	} else {
-		SDL_LoadWAV(name, &snd->wavSpec, &snd->wavBuffer, &snd->wavLength);
+	    snd->chunk = Mix_LoadWAV(name);
 //printf("]] at %d file, %p %d\n", __LINE__, snd->wavBuffer, (int)snd->wavLength);
-	}
-	if (!sound_device_initialized)
-	{
-		sound_device_initialized = true;
-		sound_deviceId = SDL_OpenAudioDevice(NULL, 0, &snd->wavSpec, NULL, 0);
-		SDL_PauseAudioDevice(sound_deviceId, 0);
 	}
 	return(snd);
 }
@@ -193,7 +198,7 @@ SOUNDTYPE *loadSound(char *name)
 void playSound2D(int32 id, float volume, float pitch, float pan)
 {
 	SOUNDTYPE* snd = gSoundSampleList[id].csnd;
-	int success = SDL_QueueAudio(sound_deviceId, snd->wavBuffer, snd->wavLength);
+	Mix_PlayChannel(-1, snd->chunk, 0);
 //printf("]] at %d playok=%d, %p %d\n", __LINE__, success, snd->wavBuffer, (int)snd->wavLength);
 }
 

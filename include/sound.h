@@ -65,11 +65,12 @@ enum {
 	SOUND_HOWMANY
 };
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
+
 struct SdlSound
 {
-	SDL_AudioSpec wavSpec;
-	uint32_t      wavLength;
-	uint8_t       *wavBuffer;
+	Mix_Chunk* chunk;
 };
 #define SOUNDTYPE SdlSound
 

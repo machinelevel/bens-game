@@ -9,7 +9,7 @@ CC = g++
 COMPILER_FLAGS = -w -Iinclude -DSDL2 -g3
 
 #LINKER_FLAGS specifies the libraries we're linking against
-LINKER_FLAGS = -lSDL2 -lSDL2_image -lGL -lGLU
+LINKER_FLAGS = -lSDL2 -lSDL2_image -lSDL2_mixer -lGL -lGLU
 
 #OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = bens-game
