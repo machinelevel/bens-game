@@ -67,7 +67,9 @@ enum {
 
 struct SdlSound
 {
-	int placeholder;
+	SDL_AudioSpec wavSpec;
+	uint32_t      wavLength;
+	uint8_t       *wavBuffer;
 };
 #define SOUNDTYPE SdlSound
 

@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+#include <SDL2/SDL_mixer.h>
 #include <GL/gl.h>
 #include <math.h>
 #include "genincludes.h"
@@ -149,6 +150,9 @@ void initAllSounds(void)
 	}
 }
 
+static bool sound_device_initialized = false;
+static SDL_AudioDeviceID sound_deviceId;
+
 SOUNDTYPE *loadSound(char *name)
 {
 	int32	result = 0;
@@ -159,15 +163,6 @@ SOUNDTYPE *loadSound(char *name)
 	unsigned long	size;
 	int		repeat;
 
-	// if (!gSoundMgr) {
-	// 	HWND	hw = NULL;
-	// 	hw = GetForegroundWindow();
-	// 	gSoundMgr = new CSoundManager;
-	// 	hr = gSoundMgr->Initialize(hw, DSSCL_PRIORITY);
-	// 	hr = gSoundMgr->SetPrimaryBufferFormat( 2, 22050, 16 );
-	// }
-	// if (!gSoundMgr) return(NULL);
-
 	if ((name == NULL) || (name[0] == 0)) return(NULL);
 
 	if (gRapidFire) repeat = 10;
@@ -176,19 +171,30 @@ SOUNDTYPE *loadSound(char *name)
 	tsuMarkFile(name);
 	tsuptr = (char*)tsuGetMemFile(name, &tsusize);
 	if (tsuptr) {
-//		format = (LPWAVEFORMATEX)(tsuptr+20);
-		pdata = (unsigned char*)(tsuptr+40);
-		int	slop = 40;	//// try to reduce the click
-		size = tsusize-(40+slop);
-		// hr = gSoundMgr->CreateFromMemory(&snd, pdata, size, format, DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY, GUID_NULL, repeat);//, DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY | DSBCAPS_CTRLPAN);
+//		pdata = (unsigned char*)(tsuptr+40); // skip header
+//		int	slop = 40;	//// try to reduce the click
+//		size = tsusize-slop;
+		SDL_RWops* rwops = SDL_RWFromMem(tsuptr, tsusize);
+		SDL_LoadWAV_RW(rwops, 0, &snd->wavSpec, &snd->wavBuffer, &snd->wavLength);
+//printf("]] at %d tsu, %p %d\n", __LINE__, snd->wavBuffer, (int)snd->wavLength);
 	} else {
-		// hr = gSoundMgr->Create(&snd, name, DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY, GUID_NULL, repeat);//, DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY | DSBCAPS_CTRLPAN);
+		SDL_LoadWAV(name, &snd->wavSpec, &snd->wavBuffer, &snd->wavLength);
+//printf("]] at %d file, %p %d\n", __LINE__, snd->wavBuffer, (int)snd->wavLength);
+	}
+	if (!sound_device_initialized)
+	{
+		sound_device_initialized = true;
+		sound_deviceId = SDL_OpenAudioDevice(NULL, 0, &snd->wavSpec, NULL, 0);
+		SDL_PauseAudioDevice(sound_deviceId, 0);
 	}
 	return(snd);
 }
 
 void playSound2D(int32 id, float volume, float pitch, float pan)
 {
+	SOUNDTYPE* snd = gSoundSampleList[id].csnd;
+	int success = SDL_QueueAudio(sound_deviceId, snd->wavBuffer, snd->wavLength);
+//printf("]] at %d playok=%d, %p %d\n", __LINE__, success, snd->wavBuffer, (int)snd->wavLength);
 }
 
 #ifdef WIN32
