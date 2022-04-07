@@ -178,9 +178,6 @@ xxxxxxxx 1   B  Final HUD
 
 \*********************************************************/
 
-#ifdef WIN32
-#include <windows.h>
-#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -211,10 +208,6 @@ xxxxxxxx 1   B  Final HUD
 #include "tsufile.h"
 #include "translation.h"
 
-#if MAC_BUILD
-#include "macutils.h"
-#endif
-
 char	    *main_window_title = TRANSLATE(TXT_Bens_Game);
 uint64_t    main_sdl_window_flags = SDL_WINDOW_OPENGL;
 SDL_Window* main_sdl_window = NULL;
@@ -222,46 +215,6 @@ SDL_Window* main_sdl_window = NULL;
 static int32 CurrentMouseButtons = 0;
 int32	MainWindowSize[2] = {640, 480};
 bool	doneFlag = false;
-//int32	MainWindowSize[2] = {800, (800*9)/16};
-
-
-#ifdef WIN32
-void checkDirectXVersion(void)
-{	/**** check the directX version ****/
-	HKEY	hKey;
-	char	versionStr[256];
-	int		result, versionStrLen = sizeof(versionStr);
-	int		v1, v2, v3, minVersion = 9;
-
-	versionStr[0] = 0;
-	result = RegOpenKeyEx( HKEY_LOCAL_MACHINE, "SOFTWARE\\Microsoft\\DirectX", 0, KEY_QUERY_VALUE, &hKey );
-	if (result == ERROR_SUCCESS) {
-		result = RegQueryValueEx( hKey, "Version", NULL, NULL, (LPBYTE)versionStr, (LPDWORD)&versionStrLen);
-		RegCloseKey( hKey );
-		if (result == ERROR_SUCCESS) {
-			result = sscanf(versionStr, " %d . %d . %d ", &v1, &v2, &v3);
-			if (result >= 2 && v1 == 4) {
-				printf("\nDirectX version is '%s'\n\n", versionStr+2);
-				if (v2 < minVersion) {
-					printf("\n\n\n\n\n\n\n\n");
-					printf("____________________________________________________\n");
-					printf("\n");
-					printf("NOTE: DirectX version %d is installed.\n", v2);
-					printf("      Graphics errors or sound problems may occur\n");
-					printf("      in DirectX versions lower then %d.\n\n", minVersion);
-					printf("      To update your DirectX version,\n");
-					printf("      please visit www.microsoft.com/directx\n");
-					printf("____________________________________________________\n");
-//					printf("Press ENTER to continue...");
-					printf("\n\n\n\n\n\n\n\n");
-//					getchar();
-				}
-			}
-		}
-	}
-}
-#endif
-
 
 void InitApplication(void)
 {
@@ -294,11 +247,6 @@ void ShutdownApplication(int exitError)
 {
 	SDL_DestroyWindow(main_sdl_window);
 	SDL_Quit();
-	
-#if MAC_BUILD
-	mac_teardown();
-#endif
-
 	exit( exitError);	
 }
 
@@ -472,12 +420,6 @@ void mainMouseMotion(int x, int y)
 	HandleMouseMotion(x, y);
 }
 
-/**** The MSVC++ optimizer screws up in this file, so shut it off. ****/
-#ifdef WIN32
- #pragma optimize("", off)
-#endif
-
-
 void mainJoystick(unsigned int buttonMask, int x, int y, int z)
 {
 	int xx,yy,zz,rr;
@@ -619,11 +561,6 @@ int main(int argc, char **argv)
 	checkDirectXVersion();
 #endif
 
-#if MAC_BUILD
-	if (mac_init())
-	{
-#endif
-
     if (SDL_Init(SDL_INIT_TIMER|SDL_INIT_VIDEO|SDL_INIT_AUDIO|SDL_INIT_EVENTS) != 0)
     {
         SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
@@ -656,10 +593,6 @@ int main(int argc, char **argv)
 	SDL_DestroyWindow(main_sdl_window);
 	IMG_Quit();
 	SDL_Quit();
-
-#if MAC_BUILD
-	}
-#endif
 	return 0;
 }
 

@@ -787,14 +787,7 @@ void *tsuGetMemFile(char *fileName, uint32 *psize)
 	tag++;
 
 	while (tag && tag->dataSize) {
-#ifdef WIN32
-		if (!stricmp(tag->name, fileName)) {
-#else
-		// 	MAC version
-		//	**** ej wanted a independent (non-case sensitive string comp).
-		if (!strcmp(tag->name, fileName)) {
-#endif
-		
+        	if (!strcmp(tag->name, fileName)) {
 			if (psize) *psize = tag->dataSize;
 			return((void*)(tag + 1));
 		}

@@ -10,11 +10,6 @@
 
 \***************************************************/
 
-#ifdef WIN32
-#define _WIN32_WINNT	0x0501 // needed for directory ops
-#include <windows.h>
-#endif
-
 #include <stdio.h>
 #include <stdint.h>
 #include <SDL2/SDL.h>
@@ -37,10 +32,6 @@
 #include "sound.h"
 #include "font.h"
 #include "translation.h"
-
-#if MAC_BUILD
-#include "macutils.h"
-#endif
 
 extern SDL_Window* main_sdl_window;
 

@@ -15,10 +15,6 @@
 #include "slides.h"
 #include "translation.h"
 
-#if MAC_BUILD
-#include "macutils.h"
-#endif
-
 #define TLF_GRAY_TO_ALPHA		0x00000001
 #define TLF_WHITEOUT			0x00000002
 #define TLF_MAKESPHERE			0x00000004

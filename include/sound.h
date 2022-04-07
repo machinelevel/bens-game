@@ -71,14 +71,6 @@ struct SdlSound
 };
 #define SOUNDTYPE SdlSound
 
-#if WIN32
-// Include the windows headers
-#include "dsutil.h"
-#include "dxutil.h"
-
-#define SOUNDTYPE	CSound
-#endif
-
 #if MAC_BUILD
 
 typedef struct { 

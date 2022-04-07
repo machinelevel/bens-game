@@ -3,11 +3,6 @@
 	translation.cpp
 	Files for international translation in Ben's project
 \************************************************************/
-#ifdef WIN32
- #define _WIN32_WINNT	0x0501 // needed for directory ops
- #include <windows.h>
-#endif
-
 #include <stdio.h>
 #include <stdint.h>
 #include <SDL2/SDL.h>
@@ -22,9 +17,8 @@
 #include "translation.h"
 #include "tsufile.h"
 
-#if MAC_BUILD
- #include "umath.h"
- #include "macutils.h"
+#if PLATFORM_BIG_ENDIAN
+// @@@ fix twist for big-e
 #else
  #define TWIST(_x) (_x)
 #endif
