@@ -1,0 +1,207 @@
+Translation file for Ben's Game
+
+0 [Ben's Game]
+
+1 [Great job - keep it up!]
+
+2 [Don't be afraid.]
+
+3 [Take it one day at a time.]
+
+4 [Don't give up - be strong.]
+
+5 [Every day is a great day.]
+
+6 [Don't forget to take your pills!]
+
+7 [A nap a day keeps the blahs away.]
+
+8 [Never think bad thoughts.]
+
+9 [If you have a tummyache, make yourself a milkshake.]
+
+10 [Don't stop now, you're doing great.]
+
+11 [Keep going - zoom to the finish!]
+
+12 [So you're bald - big deal!]
+
+13 [noosllewteg!] (That's "get well soon!" spelled backwards)
+
+14 [You're a star.]
+
+15 [Welcome to Ben's Game!]
+
+16 [This is a game about fighting cancer. In Ben's Game, you play a high-speed hero with good friends and all the right tools.]
+
+17 [For more detailed instructions, visit www.makewish.org/ben.]
+
+18 [Find Seven Shields]
+
+19 [There are SEVEN SHIELDS to collect. These are shields for protection against some yucky side-effects.]
+
+20 [Chicken Pox]
+
+21 [Fever]
+
+22 [Bleeding]
+
+23 [Hair Loss]
+
+24 [Barf]
+
+25 [Rash]
+
+26 [Colds]
+
+27 [Defeat Monsters]
+
+28 [Each shield is guarded by a MONSTER who generates MUTATED CELLS.]
+
+29 [Staying Healthy]
+
+30 [Your hero has:
+
+       HEALTH from the hospital
+
+       AMMO from the pharmacy
+
+       ATTITUDE from home.
+
+When you bump a MUTATED CELL, you lose HEALTH. To get it back, fly to the HEALTH BUBBLE in the corner of the board.]
+
+31 [Setbacks]
+
+32 [Electrical barriers in the game are called SETBACKS. When you hit them, you lose ATTITUDE.]
+
+33 [Weapons and Ammo]
+
+34 [There are WEAPONS floating in bubbles in the game. To get a weapon, just run into it.]
+
+35 [Customize Ben's Game!]
+
+36 [The character can look like anything you want!
+It can look like you, your pet, a spaceship...
+anything! To create a custom character (this
+might require a grown-up's help), look in the
+'textures' folder, and use the existing pictures
+as templates. For details on how to customize
+the character, visit www.makewish.org/ben]
+
+37 [Make-A-Wish]
+
+38 [How to Play]
+
+39 [Thanks!]
+
+40 [Options]
+
+41 [Message from Ben]
+
+42 [Quit]
+
+43 [One Player]
+
+44 [Two Players]
+
+45 [Go Back]
+
+46 [Play]
+
+47 [Start a brand new game]
+
+48 [Continue where you left off]
+
+49 [Yes, bye bye.]
+
+50 [No, keep playing!]
+
+51 [Next]
+
+52 [The Greater Bay Area]
+
+53 [Make-A-Wish Foundation]
+
+54 [This game was made possible when Ben and Eric were introduced to one another through the Greater Bay Area Make-A-Wish Foundation.
+
+Make-a-Wish to grants the wishes of children with life-threatening medical conditions to enrich the human experience with hope, strength, and joy.
+
+If you enjoy Ben's Game, please consider using the links below to make a donation to Make-A-Wish. Your contribution will help to make sure they have the resources to keep granting wishes for kids like Ben.]
+
+55 [These buttons will take you to the Make-A-Wish web pages.]
+
+56 [Make a Donation]
+
+57 [Visit Make-A-Wish]
+
+58 [Ben's Game Page]
+
+59 [A Message From Ben!]
+
+60 [Game Options]
+
+61 [Start up Ben's Game in a window next time]
+
+62 [Use higher quality graphics (may be slower)]
+
+63 [Enable sound effects]
+
+64 [Enable character voices]
+
+65 [Wavy motion for cells]
+
+66 [Auto-save my progress]
+
+67 [Ben and Eric wish to say
+THANKS
+to the following people]
+
+68 [Are you sure you
+want to quit?]
+
+69 [Version: Release 1 (6/29/04)]
+
+70 [Welcome to Ben's Game!
+To get an updated version, or to make comments and report bugs, please visit www.makewish.org/ben]
+
+71 [New Game]
+
+72 [Continue Game]
+
+73 (do not translate this) [font2Ar24]
+
+74 (do not translate this) [font2Ar24000]
+
+75 (do not translate this) [----Checkpoint1----]
+
+76 [Thank you!]
+
+77 [COMPLETE]
+
+78 [Play!]
+
+79 [PLAY
+EASY]
+
+80 [PLAY
+MEDIUM]
+
+81 [PLAY
+HARD]
+
+82 [You Win!]
+
+83 [Player 1]
+
+84 [Player 2]
+
+85 [Move]
+
+86 [Brakes]
+
+87 [Fire]
+
+88 [Switch Weapon]
+
+89 [Adjust Camera]
+

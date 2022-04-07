@@ -1,0 +1,275 @@
+Translation file for Ben's Game
+
+line 0
+[Ben's Game - La sfida di Ben]
+
+line 1
+[Ottimo lavoro, continua così!]
+
+line 2
+[Non avere paura.]
+
+line 3
+[Affronta le sfide una alla volta.]
+
+line 4
+[Non arrenderti, sii forte.]
+
+line 5
+[Ogni giorno è un grande giorno.]
+
+line 6
+[Non dimenticare di prendere le medicine!]
+
+line 7
+[Un sonnellino al giorno toglie la tristezza di torno.]
+
+line 8
+[Pensa sempre a cose belle.]
+
+line 9
+[Hai lo stomaco sballato? Fatti un bel frullato!]
+
+line 10
+[Non fermarti ora, vai alla grande!]
+
+line 11
+[Continua così, vola verso il traguardo!]
+
+line 12
+[Ok, hai perso i capelli... e allora?!]
+
+line 13
+[otserpicsiraug!]
+
+line 14
+[Sei un grande!]
+
+line 15
+[Ciao! Benvenuto a "La sfida di Ben"!]
+
+line 16
+[In questo gioco devi battere il cancro. In "La sfida di Ben" sei un eroe veloce come il lampo, accompagnato da fedeli alleati e dotato di tutto il necessario per riuscire nell'impresa.]
+
+line 17
+[Per le istruzioni dettagliate visita il sito www.makewish.org/ben.]
+
+line 18
+[Trova i sette scudi]
+
+line 19
+[Devi raccogliere i SETTE SCUDI che ti proteggeranno da certi effetti collaterali poco simpatici.]
+
+line 20
+[Varicella]
+
+line 21
+[Febbre]
+
+line 22
+[Perdite di sangue]
+
+line 23
+[Perdita di capelli]
+
+line 24
+[Nausea]
+
+line 25
+[Infiammazioni
+della pelle]
+
+line 26
+[Raffreddori]
+
+line 27
+[Sconfiggi i mostri]
+
+line 28
+[Ogni scudo è sorvegliato da un MOSTRO che genera CELLULE MUTATE.]
+
+line 29
+[Come mantenerti sano]
+
+line 30
+[Il tuo eroe può trovare:
+
+       la SALUTE nell'ospedale
+       
+       le MUNIZIONI nella farmacia
+
+       la GRINTA a casa
+
+Se tocchi una CELLULA MUTATA perdi SALUTE. Per recuperarla, vola alla BOLLA DI SALUTE nell'angolo dello schermo.]
+
+line 31
+[Ostacoli]
+
+line 32
+[Gli OSTACOLI del gioco sono le barriere elettriche. Se ci finisci contro perdi la GRINTA.]
+
+line 33
+[Armi e munizioni]
+
+line 34
+[Le ARMI galleggiano all'interno di bolle speciali. Per prendere un'arma, devi solo passare attraverso la bolla.]
+
+line 35
+[Personalizza "La sfida di Ben"!]
+
+line 36
+[Personalizza l'aspetto del tuo personaggio! Può assomigliare a te, al tuo cane, a un'astronave... a tutto quello che vuoi! Per creare un personaggio speciale (magari con l'aiuto di un adulto), guarda nella cartella "textures" e usa le immagini come modello. Per ulteriori informazioni su come personalizzare gli eroi visita il sito www.makewish.org/ben]
+
+line 37
+[Make-A-Wish]
+
+line 38
+[Come giocare]
+
+line 39
+[Grazie a...]
+
+line 40
+[Opzioni]
+
+line 41
+[Messaggio di Ben]
+
+line 42
+[Esci]
+
+line 43
+[Un giocatore]
+
+line 44
+[Due giocatori]
+
+line 45
+[Indietro]
+
+line 46
+[Gioca]
+
+line 47
+[Inizia una nuova partita]
+
+line 48
+[Riprendi da dove hai interrotto]
+
+line 49
+[Sì, ciao!]
+
+line 50
+[No, continuiamo!]
+
+line 51
+[Avanti]
+
+line 52
+[The Greater Bay Area]
+
+line 53
+[Make-A-Wish Foundation]
+
+line 54
+[Questo gioco è nato grazie alla Greater Bay Area Make-A-Wish Foundation, che ha fatto incontrare Ben ed Eric.
+
+Make-a-Wish aiuta i bambini affetti da malattie ad alto rischio a realizzare i propri desideri per recuperare la speranza, la gioia e il coraggio.
+
+Se ti è piaciuto "La sfida di Ben", puoi usare il link in basso per fare una donazione a Make-A-Wish: il tuo contributo sarà fondamentale per garantire alla fondazione le risorse necessarie per realizzare i sogni di altri bambini come Ben.]
+
+line 55
+[Premi uno di questi pulsanti per visitare le pagine web di Make-A-Wish.]
+
+line 56
+[Fai una donazione]
+
+line 57
+[Visita Make-A-Wish]
+
+line 58
+[Pagina di Ben's Game
+La sfida di Ben]
+
+line 59
+[Un messaggio di Ben!]
+
+line 60
+[Opzioni di gioco]
+
+line 61
+[La prossima volta avvia "La sfida di Ben" in una finestra]
+
+line 62
+[Aumenta la qualità della grafica (il gioco potrebbe essere rallentato)]
+
+line 63
+[Attiva gli effetti audio]
+
+line 64
+[Attiva la voce dei personaggi]
+
+line 65
+[Movimento ondeggiante delle cellule]
+
+line 66
+[Salvataggio automatico]
+
+line 67
+[Ben ed Eric dicono
+GRAZIE
+a...]
+
+line 68
+[Vuoi uscire?]
+
+line 69
+[Versione: Release 1 (6/29/04)]
+
+line 70
+[Benvenuto a "La sfida di Ben"!
+Per scaricare l'ultima versione, inviarci i tuoi commenti o segnalare problemi tecnici visita il sito www.makewish.org/ben]
+
+line 71
+[Nuova partita]
+
+line 72
+[Continua partita]
+
+line 73
+[font2Ar24]
+
+line 74
+[font2Ar24000]
+
+line 75
+[----Checkpoint1----]
+76 [Grazie!]
+
+77 [COMPLETATO]
+
+78 [Gioca!]
+
+79 [FACILE]
+
+80 [MEDIO]
+
+81 [DIFFICILE]
+
+82 [Hai vinto!]
+
+83 [Giocatore 1]
+
+84 [Giocatore 2]
+
+85 [Spostati]
+
+86 [Fermati]
+
+87 [Spara]
+
+88 [Cambia arma]
+
+89 [Regola visuale]
+
+

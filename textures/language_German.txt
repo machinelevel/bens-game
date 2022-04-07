@@ -1,0 +1,543 @@
+Translation file for Ben's Game	Übersetzung in Germansky...
+
+
+
+line 0
+
+[Bens Spiel]
+
+
+
+line 1
+
+[Gute Arbeit - mach weiter so!]
+
+
+
+line 2
+
+[Hab keine Angst.]
+
+
+
+line 3
+
+[Lebe den Tag.]
+
+
+
+line 4
+
+[Nicht aufgeben - Sei stark!]
+
+
+
+line 5
+
+[Jeder Tag ist ein guter Tag.]
+
+
+
+
+
+line 6
+
+[Vergiss auch nicht, deine Pillen einzunehmen.]
+
+
+
+line 7
+
+[Ein Nickerchen in Ehren kann niemand verwehren.]
+
+
+
+line 8
+
+[Der Pessimist ist der einzige Mist, auf dem nichts wächst ;-)]
+
+
+
+line 9
+
+[Quält dich hier und da der Magen,
+musst du Dich am Milchshake laben.]
+
+
+
+line 10
+
+[Hör jetzt nicht auf, du machst das großartig!]
+
+
+
+line 11
+
+[Nur weiter - geradewegs auf das Ziel zu!]
+
+
+
+line 12
+
+[Du bist also kahl... na und!]
+
+
+
+line 13
+
+[dnusegdlabedreW!]
+
+
+
+line 14
+
+[Du bist super!]
+
+
+
+line 15
+
+[Herzlich willkommen in Bens Spiel]
+
+
+
+line 16
+
+[Dieses Spiel soll helfen den Krebs zu besiegen. In Bens Spiel schlüpfst du in die Rolle eines supercoolen Helden mit vielen guten Freunden und natürlich der richtigen Ausrüstung.]
+
+
+
+line 17
+
+[Genauere Informationen findest du unter www.makewish.org/ben .]
+
+
+
+
+
+line 18
+
+[Finde die sieben Schutzschilder]
+
+
+
+line 19
+
+[Sieben Schutzschilder kannst du im Spiel sammeln. Sie beschützen dich vor den lästigen Nebenwirkungen.] 
+
+
+
+line 20
+
+[Windpocken]
+
+
+
+line 21
+
+[Fieber]
+
+
+
+line 22
+
+[Blutungen]
+
+
+
+line 23
+
+[Haarausfall]
+
+
+
+line 24
+
+[Erbrechen]
+
+
+
+line 25
+
+[Ausschlag]
+
+
+
+line 26
+
+[Erkältung]
+
+
+
+line 27
+
+[Besiege die Monster]
+
+
+
+line 28
+
+[Jedes Schutzschild wird von einem Monster bewacht, welches Zellen mutieren lässt.]
+
+
+
+line 29
+
+[Wie du gesund bleibst]
+
+
+
+line 30
+
+[Du hast:
+
+     Gesundheit aus dem Krankenhaus
+
+     Munition aus der Apotheke
+
+     Motivation von Zuhause
+
+Wenn du eine mutierte Zelle berührst, verlierst du etwas von deiner Gesundheit. Um sie dir zurück zu holen, fliege zur Gesundheitsblase in der Ecke.]
+
+
+
+line 31
+
+[Rückschläge]
+
+
+
+line 32
+
+[Die elektrischen Barrieren in diesem Spiel heißen Rückschläge.
+Wenn du sie triffst, verlierst du etwas Motivation.]
+
+
+
+line 33
+
+[Waffen und Munition]
+
+
+
+line 34
+
+[Im Spiel schweben die Waffen in Blasen über dem Spielfeld. Um eine Waffe einzusammeln, berühre sie einfach.]
+
+
+
+line 35
+
+[Erstelle deine eigene Spielfigur!]
+
+
+
+line 36
+
+[Deine Spielfigur kann so aussehen wie du es dir wünschst! Sie kann aussehen wie du, dein Haustier oder auch ein Raumschiff…alles ist möglich! Um eine eigene Spielfigur zu erstellen
+(vielleicht kann dir dabei ein Erwachsener helfen), finde den Ordner mit dem Namen "textures", und benutze die vorhandenen Figuren als Vorlage. Genauere Informationen dazu findest du im Internet unter www.makewish.org/ben]
+
+
+
+line 37
+
+[Über Make-A-Wish]
+
+
+
+line 38
+
+[Wie man spielt]
+
+
+
+line 39
+
+[Danksagungen!]
+
+
+
+line 40
+
+[Einstellungen]
+
+
+
+line 41
+
+[Eine Nachricht
+von Ben]
+
+
+
+line 42
+
+[Beenden]
+
+
+
+line 43
+
+[Ein Spieler]
+
+
+
+line 44
+
+[Zwei Spieler]
+
+
+
+line 
+
+[Zurück]
+
+
+
+line 46
+
+[Los geht's]
+
+
+
+line 47
+
+[Starte ein neues Spiel]
+
+
+
+line 48
+
+[Mache da weiter, wo du aufgehört hast] 
+
+
+
+line 49
+
+[Ja, auf Wiedersehen.]
+
+
+
+line 50
+
+[Nein, ich spiele weiter!]
+
+
+
+line 51
+
+[Weiter]
+
+
+
+line 52
+
+[The Greater Bay Area]
+
+
+
+line 53
+
+[Make-A-Wish Stiftung]
+
+
+
+Line 54
+
+[Die Realisierung des Spiels wurde möglich, als sich Ben und Eric durch "The Greater Bay Area Make-A-Wish Stiftung" kennen gelernt haben.
+Make-a-Wish verwirklicht die Wünsche von Kindern, die lebensgefährlich erkrankt sind, um die täglichen Erfahrungen im Umgang miteinander um Dinge wie Hoffnung, Kraft und Freude zu bereichern. 
+
+Wenn dir Bens Spiel gefällt, denke doch bitte darüber nach, die Links unten zu benutzen, um Make-A-Wish ein bisschen Geld zu spenden. Deine Spende wird dazu beitragen, auch anderen Kindern wie Ben auf diese Weise helfen zu können.] 
+
+
+
+line 55
+
+[Diese Knöpfe bringen dich zu den Internetseiten von Make-A-Wish:]
+
+
+
+line 56
+
+[Spenden]
+
+
+
+line 57
+
+[Besuche Make-A-Wish]
+
+
+
+line 58
+
+[Homepage von Ben's Game]
+
+
+
+line 59
+
+[Eine Nachricht von Ben!]
+
+
+
+line 60
+
+[Spieleinstellungen]
+
+
+
+line 61
+
+[Bens Spiel beim nächsten Mal in einem Fenster anzeigen]
+
+
+
+line 62
+
+[Benutze verbesserte Grafik (Verlangsamt das Spiel auf älteren Computern)]
+
+
+
+line 63
+
+[Soundeffekte]
+
+
+
+line 64
+
+[Stimmen]
+
+
+
+line 65
+
+[Wellenbewegung des Spielfelds]
+
+
+
+line 66
+
+[Meine Fortschritte automatisch speichern]
+
+
+
+line 67
+
+[Ben und Eric möchten sich
+bei all diesen Leuten
+HERZLICH BEDANKEN:]
+
+
+
+line 68
+
+[Möchtest du wirklich
+schon aufhören?]
+
+
+
+line 69
+
+[Version: Release 1 (29/06/04)]
+
+
+
+Line 70
+
+[Herzlich willkommen bei Bens Spiel!
+
+Um die neuste Version zu bekommen, Kommentare zu schreiben oder auch
+Bugs zu melden, einfach bei www.makewish.org/ben vorbeischauen.]
+
+
+
+line 71
+
+[Neues Spiel]
+
+
+
+line 72
+
+[Spiel fortsetzen]
+
+
+
+line 73
+
+[font2Ar24]
+
+
+
+line 74
+
+[font2Ar24000]
+
+
+
+line 75
+
+[----Checkpoint1----]
+
+
+
+76 [Danke!]
+
+
+
+77 [GESCHAFFT]
+
+
+
+78 [Spiele!]
+
+
+
+79 [Einfach]
+
+
+
+80 [Normal]
+
+
+
+81 [Schwierig]
+
+
+
+82 [Du hast gewonnen!]
+
+
+
+83 [Spieler 1]
+
+
+
+84 [Spieler 2]
+
+
+
+85 [Bewegung]
+
+
+
+86 [Bremse]
+
+
+
+87 [Feuer]
+
+
+
+88 [Waffe wechsein]
+
+
+
+89 [Kamera ausrichten]
+
+
+
+
+

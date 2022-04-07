@@ -1,0 +1,10 @@
+This is the options file for Ben's game!
+To change these values, use the checkbubbles in the game.
+
+gOptionLaunchInWindow = 1
+gOptionMipMap = 0
+gOptionSoundEffectsOn = 1
+gOptionVoicesOn = 1
+gOptionWaves = 1
+gOptionAutoSave = 1
+gOptionLanguage = English
