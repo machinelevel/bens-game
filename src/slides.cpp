@@ -2249,19 +2249,22 @@ void Slides::TendButtonSize(int buttonID, float w, float h, float speed)
 //	speed = 1.0f;
 //	buttonRects[buttonID].w += UnscaledDeltaTime * speed * (w - buttonRects[buttonID].w);
 //	buttonRects[buttonID].h += UnscaledDeltaTime * speed * (h - buttonRects[buttonID].h);
+	float dt = UnscaledDeltaTime;
+	if (dt < 1.0f/100.0f)
+		dt = 1.0f/100.0f;
 
 	if (buttonRects[buttonID].w < w) {
-		buttonRects[buttonID].w += UnscaledDeltaTime * speed;
+		buttonRects[buttonID].w += dt * speed;
 		if (buttonRects[buttonID].w > w) buttonRects[buttonID].w = w;
 	} else if (buttonRects[buttonID].w > w) {
-		buttonRects[buttonID].w -= UnscaledDeltaTime * speed;
+		buttonRects[buttonID].w -= dt * speed;
 		if (buttonRects[buttonID].w < w) buttonRects[buttonID].w = w;
 	}
 	if (buttonRects[buttonID].h < h) {
-		buttonRects[buttonID].h += UnscaledDeltaTime * speed;
+		buttonRects[buttonID].h += dt * speed;
 		if (buttonRects[buttonID].h > h) buttonRects[buttonID].h = h;
 	} else if (buttonRects[buttonID].h > h) {
-		buttonRects[buttonID].h -= UnscaledDeltaTime * speed;
+		buttonRects[buttonID].h -= dt * speed;
 		if (buttonRects[buttonID].h < h) buttonRects[buttonID].h = h;
 	}
 
@@ -2269,18 +2272,21 @@ void Slides::TendButtonSize(int buttonID, float w, float h, float speed)
 
 void Slides::TendButtonPos(int buttonID, float cx, float cy, float speed)
 {
+	float dt = UnscaledDeltaTime;
+	if (dt < 1.0f/100.0f)
+		dt = 1.0f/100.0f;
 	if (buttonRects[buttonID].cx < cx) {
-		buttonRects[buttonID].cx += UnscaledDeltaTime * speed;
+		buttonRects[buttonID].cx += dt * speed;
 		if (buttonRects[buttonID].cx > cx) buttonRects[buttonID].cx = cx;
 	} else if (buttonRects[buttonID].cx > cx) {
-		buttonRects[buttonID].cx -= UnscaledDeltaTime * speed;
+		buttonRects[buttonID].cx -= dt * speed;
 		if (buttonRects[buttonID].cx < cx) buttonRects[buttonID].cx = cx;
 	}
 	if (buttonRects[buttonID].cy < cy) {
-		buttonRects[buttonID].cy += UnscaledDeltaTime * speed;
+		buttonRects[buttonID].cy += dt * speed;
 		if (buttonRects[buttonID].cy > cy) buttonRects[buttonID].cy = cy;
 	} else if (buttonRects[buttonID].cy > cy) {
-		buttonRects[buttonID].cy -= UnscaledDeltaTime * speed;
+		buttonRects[buttonID].cy -= dt * speed;
 		if (buttonRects[buttonID].cy < cy) buttonRects[buttonID].cy = cy;
 	}
 }
