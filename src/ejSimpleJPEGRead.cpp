@@ -1,6 +1,7 @@
 /**** ej's simple jpeg read code ****/
 
 #include <stdio.h>
+#include <memory.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 

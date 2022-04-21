@@ -456,7 +456,7 @@ void getMaskImage(char *name, uint32 *base, int32 width, int32 height)
 	uint32	i, count = width * height;
 	FILE	*fp = NULL;
 	bool	ok;
-	uint32	h, w, bitDepth, *base2;
+	uint32	h, w, bitDepth, *base2 = NULL;
 	uint32	*dst, *src;
 	void	*tsuptr;
 	uint32	tsusize;
@@ -498,7 +498,7 @@ void getMaskImage(char *name, uint32 *base, int32 width, int32 height)
 
 unsigned *
 read_texture(char *name, int *width, int *height, int *components) {
-    unsigned int *base, *lptr;
+    unsigned int *base = NULL, *lptr;
     unsigned char *rbuf, *gbuf, *bbuf, *abuf;
     int y;
 

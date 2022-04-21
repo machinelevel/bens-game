@@ -202,7 +202,7 @@ void playSound2D(int32 id, float volume, float pitch, float pan)
 //printf("]] at %d playok=%d, %p %d\n", __LINE__, success, snd->wavBuffer, (int)snd->wavLength);
 }
 
-#ifdef WIN32
+#if 0
 static CSoundManager			*gSoundMgr = NULL;
 
 SOUNDTYPE *loadSound(char *name)

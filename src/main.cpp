@@ -565,7 +565,8 @@ void main_event_loop()
 
 int main(int argc, char **argv)
 {
-#ifdef WIN32
+#if 0
+//#ifdef WIN32
 	checkDirectXVersion();
 #endif
 

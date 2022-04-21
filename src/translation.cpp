@@ -385,7 +385,8 @@ void FindLanguages(void)
 	AddLanguage("language_English.txt", false);
 	AddLanguage("language_English.txt", true);
 
-#ifdef WIN32
+#if 0
+//#ifdef WIN32
 	WIN32_FIND_DATA FindFileData;
 	HANDLE			hFind;
 

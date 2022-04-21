@@ -864,7 +864,8 @@ void Slides::ScanPlayerImages(void)
 	addBoardImage("board_Jet_1.jpg");
 	addBoardImage("board_Jet_2.jpg");
 
-#ifdef WIN32
+	#if 0
+	//#ifdef WIN32
 	WIN32_FIND_DATA FindFileData;
 	HANDLE			hFind;
 	Glider	*g;
@@ -1263,7 +1264,8 @@ char	*donationURL = "https://secure2.wish.org/site/SPageServer?pagename=donate_t
 char	*wishURL = "https://wish.org/greaterbay";
 char	*benURL = "https://en.wikipedia.org/wiki/Ben's_Game";
 
-#ifdef WIN32
+#if 0
+//#ifdef WIN32
 void mac_LaunchURL(char *url)
 {
 	ShellExecute(NULL, "open", url, NULL, NULL, SW_SHOWNORMAL);
