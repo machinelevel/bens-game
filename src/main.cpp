@@ -499,12 +499,12 @@ void main_event_loop()
       	int y = 0;
       	switch (Event.key.keysym.sym)
       	{
-		case SDLK_LEFT:  ControlPressKey(0xe2, TRUE); break;
-		case SDLK_RIGHT: ControlPressKey(0xe1, TRUE); break;
-		case SDLK_UP:    ControlPressKey(0xe4, TRUE); break;
-		case SDLK_DOWN:  ControlPressKey(0xe3, TRUE); break;
-		default:         mainKeyboardPress(Event.key.keysym.sym, x, y); break;
-		}
+				case SDLK_LEFT:  ControlPressKey(0xe2, TRUE); break;
+				case SDLK_RIGHT: ControlPressKey(0xe1, TRUE); break;
+				case SDLK_UP:    ControlPressKey(0xe4, TRUE); break;
+				case SDLK_DOWN:  ControlPressKey(0xe3, TRUE); break;
+				default:         mainKeyboardPress(Event.key.keysym.sym, x, y); break;
+				}
       }
       else if (Event.type == SDL_KEYUP)
       {
@@ -512,12 +512,12 @@ void main_event_loop()
       	int y = 0;
       	switch (Event.key.keysym.sym)
       	{
-		case SDLK_LEFT:  ControlPressKey(0xe2, FALSE); break;
-		case SDLK_RIGHT: ControlPressKey(0xe1, FALSE); break;
-		case SDLK_UP:    ControlPressKey(0xe4, FALSE); break;
-		case SDLK_DOWN:  ControlPressKey(0xe3, FALSE); break;
-		default:         mainKeyboardRelease(Event.key.keysym.sym, x, y); break;
-		}
+				case SDLK_LEFT:  ControlPressKey(0xe2, FALSE); break;
+				case SDLK_RIGHT: ControlPressKey(0xe1, FALSE); break;
+				case SDLK_UP:    ControlPressKey(0xe4, FALSE); break;
+				case SDLK_DOWN:  ControlPressKey(0xe3, FALSE); break;
+				default:         mainKeyboardRelease(Event.key.keysym.sym, x, y); break;
+				}
       }
       else if (Event.type == SDL_MOUSEBUTTONDOWN)
       {
@@ -531,6 +531,14 @@ void main_event_loop()
       {
         mainMouseMotion(Event.motion.x, Event.motion.y);
       }
+	    else if (Event.type == SDL_WINDOWEVENT)
+	    {
+	        if (Event.window.event == SDL_WINDOWEVENT_RESIZED
+	        		|| Event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+	        {
+	        		mainReshape(Event.window.data1, Event.window.data2);
+	        }
+	    }
       else if (Event.type == SDL_QUIT)
       {
         done = true;
