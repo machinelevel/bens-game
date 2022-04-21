@@ -23,27 +23,9 @@
 #include "slides.h"
 #include "random.h"
 #include "sound.h"
+#include "shadowbox.h"
 
 extern SDL_Window* main_sdl_window;
-
-bool do_shadowbox_quilt = false;
-int  shadowbox_tiles_x = 1;
-int  shadowbox_tiles_y = 1;
-
-void toggle_shadowbox()
-{
-	do_shadowbox_quilt = !do_shadowbox_quilt;
-	if (do_shadowbox_quilt)
-	{
-		shadowbox_tiles_x = 9;
-		shadowbox_tiles_y = 5;
-	}
-	else
-	{
-		shadowbox_tiles_x = 1;
-		shadowbox_tiles_y = 1;
-	}
-}
 
 void drawFloorSquare(float x, float y, float z, float size)
 {
@@ -133,7 +115,10 @@ void PreDraw(int tile_h, int tile_v)
 	if (do_shadowbox_quilt)
 	{
 		if (tile_h == 0 && tile_v == 0)
+		{
+			shadowbox_begin_render_quilt();
 			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+		}
 		float w = (float)MainWindowSize[0] / shadowbox_tiles_x;
 		float h = (float)MainWindowSize[1] / shadowbox_tiles_y;
 		glViewport(w * tile_h, h * tile_v, w, h);

@@ -207,6 +207,7 @@ xxxxxxxx 1   B  Final HUD
 #include "hud.h"
 #include "tsufile.h"
 #include "translation.h"
+#include "shadowbox.h"
 
 char	    *main_window_title = TRANSLATE(TXT_Bens_Game);
 uint64_t    main_sdl_window_flags = SDL_WINDOW_OPENGL;

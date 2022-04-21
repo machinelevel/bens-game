@@ -22,6 +22,7 @@
 #include "slides.h"
 #include "font.h"
 #include "translation.h"
+#include "shadowbox.h"
 
 char	KeysDown[256];
 char	PrevKeysDown[256];
