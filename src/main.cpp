@@ -545,8 +545,27 @@ void main_event_loop()
       }
     }
 //printf("time: %f\n", NowTime);
-	DrawMainWindow();
-	HandleIdle();
+    if (do_shadowbox_quilt)
+    {
+    	float dt = DeltaTime;
+    	float udt = UnscaledDeltaTime;
+    	for (int v = 0; v < shadowbox_tiles_y; ++v)
+    	{
+	    	for (int h = 0; h < shadowbox_tiles_x; ++h)
+	    	{
+	    		DrawMainWindow(h, v);
+	    		DeltaTime = 0.0f;
+	    		UnscaledDeltaTime = 0.0f;
+	    	}
+	    }
+  		DeltaTime = dt;
+  		UnscaledDeltaTime = udt;
+    }
+  	else
+  	{
+			DrawMainWindow(0, 0);
+		}
+		HandleIdle();
 
     // glViewport(0, 0, WinWidth, WinHeight);
     // glClearColor(0.2f, 0.0f, 0.2f, 1.0f);

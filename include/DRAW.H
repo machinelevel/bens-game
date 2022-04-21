@@ -30,6 +30,11 @@ void drawFloorSquare(float x, float y, float z, float size);
 void drawFloor(void);
 void AppDrawText(GLuint x, GLuint y, GLuint scale, char* format, ...);
 void PostDraw(void);
-void DrawMainWindow(void);
+void DrawMainWindow(int tile_h, int tile_v);
 void DrawQuickModel(quickModel *qm);
 void DrawChiaQuad(pfVec3 *verts, pfVec3 extrusion, int layers, int numFins, float alphaScale, uint32 flags);
+void toggle_shadowbox();
+
+extern bool do_shadowbox_quilt;
+extern int  shadowbox_tiles_x;
+extern int  shadowbox_tiles_y;

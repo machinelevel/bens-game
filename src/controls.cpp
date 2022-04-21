@@ -109,6 +109,9 @@ void HandleKeyboard(unsigned char key, int x, int y)
 //			gSlides->NewGame(2);
 //		}
 //		break;
+	case '\\':
+		toggle_shadowbox();
+		break;
 	case 'C':
 		if (0) {
 			if (gGameMode != GAME_MODE_SLIDES) {
