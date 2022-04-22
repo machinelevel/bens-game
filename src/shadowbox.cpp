@@ -35,6 +35,7 @@ int  shadowbox_tile_size_y = 0;
 void* shadowbox_quilt_tex32_pixels = NULL;
 bool shadowbox_initialized = false;
 GLuint shadowbox_quilt_framebuffer = 0;
+GLuint shadowbox_quilt_depthrenderbuffer = 0;
 GLuint shadowbox_quilt_to_screen_shader = 0;
 GLuint shadowbox_quilt_tex_id = 0;
 GLuint shadowbox_quilt_quad_vbo = 0;
@@ -75,6 +76,94 @@ static PFNGLFRAMEBUFFERRENDERBUFFERPROC     glFramebufferRenderbuffer     ;
 
 static SDL_Rect restore_window_bounds;
 static SDL_Rect shadowbox_window_bounds;
+
+void add_shader(GLuint program, const char* shader_src, GLenum shader_type)
+{
+    GLuint shader_obj = glCreateShader(shader_type);
+    if (!shader_obj) {
+        printf("Error creating shader type %d\n", shader_type);
+        return ;
+    }
+
+    const GLchar* p[1];
+    p[0] = shader_src;
+    GLint lengths[1];
+    lengths[0]= strlen(shader_src);
+
+    glShaderSource(shader_obj, 1, p, lengths);
+    glCompileShader(shader_obj);
+
+    GLint success;
+    glGetShaderiv(shader_obj, GL_COMPILE_STATUS, &success);
+
+    if (!success) {
+        GLchar info_log[1024];
+        glGetShaderInfoLog(shader_obj, 1024, NULL, info_log);
+        printf("Error compiling shader type %d: '%s'\n", shader_type, info_log);
+        return;
+    }
+    glAttachShader(program, shader_obj);
+}
+
+GLuint compile_one_shader(const char* vshader, const char* pshader)
+{
+    GLuint shader_program = glCreateProgram();
+    if (shader_program == 0)
+    {
+        printf("Error creating shader program\n");
+        return shader_program;
+    }
+    add_shader(shader_program, vshader, GL_VERTEX_SHADER);
+    add_shader(shader_program, pshader, GL_FRAGMENT_SHADER);
+    GLint success = 0;
+    GLchar error_log[1024] = { 0 };
+    glLinkProgram(shader_program);
+    glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
+
+    if (!success) {
+        glGetProgramInfoLog(shader_program, sizeof(error_log), NULL, error_log);
+        printf("Error linking shader program: '%s'\n", error_log);
+        return shader_program;
+    }
+    glValidateProgram(shader_program);
+    glGetProgramiv(shader_program, GL_VALIDATE_STATUS, &success);
+
+    if (!success) {
+        glGetProgramInfoLog(shader_program, sizeof(error_log), NULL, error_log);
+        printf("Invalid shader program: '%s'\n", error_log);
+        return shader_program;
+    }
+    return shader_program;
+}
+
+static const char* quilt_to_screen_vshader = "\
+attribute vec4 vertPos_data;\n\
+attribute vec2 vertDepth_data;\n\
+\n\
+varying vec2 src_uv;\n\
+varying vec2 texCoords;\n\
+varying vec2 sprite_depth_and_px_scale;\n\
+\n\
+void main()\n\
+{\n\
+    gl_Position = vec4(vertPos_data.xy, 0.0, 1.0);\n\
+    src_uv = vertPos_data.zw;\n\
+    texCoords = vec2((vertPos_data.x + 1.0) * 0.5, 1.0 - (vertPos_data.y + 1.0) * 0.5);\n\
+    sprite_depth_and_px_scale = vertDepth_data;\n\
+}";
+
+static const char* quilt_to_screen_pshader = 
+"#line 155\n"
+"varying vec2 src_uv;\n"
+"varying vec2 texCoords;\n"
+"uniform sampler2D screenTex;\n"
+"void main()\n"
+"{\n"
+"   vec3 color = texture2D(screenTex, texCoords.xy).rgb;\n"
+"   color += vec3(0.5 * texCoords.xy, 0.0);\n"
+"   gl_FragColor = vec4(color, 1.0);\n"
+"}\n"
+"";
 
 void toggle_shadowbox()
 {
@@ -163,24 +252,55 @@ void toggle_shadowbox()
             glRenderbufferStorage     = (PFNGLRENDERBUFFERSTORAGEPROC)         SDL_GL_GetProcAddress("glRenderbufferStorage");
             glFramebufferRenderbuffer     = (PFNGLFRAMEBUFFERRENDERBUFFERPROC)     SDL_GL_GetProcAddress("glFramebufferRenderbuffer");
 #ifdef SHADOWBOX_OFFSCREEN
+            int total_x = shadowbox_tile_size_x * shadowbox_tiles_x;
+            int total_y = shadowbox_tile_size_y * shadowbox_tiles_y;
 	        glGenFramebuffers(1, &shadowbox_quilt_framebuffer);
+            glGenRenderbuffers(1, &shadowbox_quilt_depthrenderbuffer);
         	glGenTextures(1, &shadowbox_quilt_tex_id);
+#if 1
+            // The depth buffer
+            glBindRenderbuffer(GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, total_x, total_y);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
+            glBindRenderbuffer(GL_RENDERBUFFER, 0);
+#endif
+
+
 	        glGenBuffers(1, &shadowbox_quilt_quad_vbo);
 	        // Make the offscreen texture
 	        glActiveTexture(GL_TEXTURE0);
 	        glBindTexture(GL_TEXTURE_2D, shadowbox_quilt_tex_id);
-            int total_x = shadowbox_tile_size_x * shadowbox_tiles_x;
-            int total_y = shadowbox_tile_size_y * shadowbox_tiles_y;
-            shadowbox_quilt_tex32_pixels = malloc(total_x * total_y * 4); // TODO: Might not need this buffer at all.
+            uint64_t total_bytes = total_x * total_y * 4;
+            shadowbox_quilt_tex32_pixels = malloc(total_bytes); // TODO: Might not need this buffer at all.
+            // initialize to something obnoxious for debugging
+            uint32_t* pix = (uint32_t*)shadowbox_quilt_tex32_pixels;
+            for (int y = 0; y < total_y; ++y)
+            {
+                for (int x = 0; x < total_x; ++x)
+                {
+                    uint32_t* dst = pix + (y * total_x) + x;
+                    uint32_t color = 0xff0000ff;
+                    if ((y / 256) & 1)
+                        color |= 0x00ff0000;
+                    if ((x / 256) & 1)
+                        color |= 0x0000ff00;
+                    *dst = color;
+                }
+            }
+            // initialize to something obnoxious for debugging
+            // for (uint64_t i = 0; i < total_bytes; ++i)
+            //     ((uint8_t*)shadowbox_quilt_tex32_pixels)[i] = (uint8_t)i;
             printf("Quilt texture is %dx%d, %d MB\n", total_x, total_y, (total_x * total_y * 4) / 1048576);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 
                          total_x,
                          total_y,
-                         0, GL_RGB, GL_UNSIGNED_BYTE, shadowbox_quilt_tex32_pixels);
+                         0, GL_RGBA, GL_UNSIGNED_BYTE, shadowbox_quilt_tex32_pixels);
 	        // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, 
          //                 shadowbox_tile_size_x * shadowbox_tiles_x,
          //                 shadowbox_tile_size_y * shadowbox_tiles_y,
 	        //              0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, NULL);
+            shadowbox_quilt_to_screen_shader = compile_one_shader(quilt_to_screen_vshader,
+                                                                  quilt_to_screen_pshader);
 #endif
 		}
 	}
@@ -205,13 +325,23 @@ check_gl_errors(__LINE__);
         // glBindRenderbuffer(GL_RENDERBUFFER, quilt->depthrenderbuffer);
         // glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, quilt->depthrenderbuffer);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, shadowbox_quilt_tex_id, 0);
+    GLenum draw_buffers[1] = {GL_COLOR_ATTACHMENT0};
+    if (1)
+    {
+        glBindRenderbuffer(GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
+    }
+    glDrawBuffers(1, draw_buffers); // "1" is the size of draw_buffers
 check_gl_errors(__LINE__);
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        printf("ERROR: quilt framebuffer is not ok: 0x%x\n", (int)glCheckFramebufferStatus(GL_FRAMEBUFFER));
+glDisable(GL_DEPTH_TEST);
 #endif
 }
 
 void shadowbox_end_render_quilt()
 {
-    return;
+//    return;
 check_gl_errors(__LINE__);
     glFinish();
 check_gl_errors(__LINE__);
@@ -228,9 +358,13 @@ void shadowbox_draw_quilt_to_screen()
     GLint old_program;
     glDisable(GL_BLEND);
     glGetIntegerv(GL_CURRENT_PROGRAM, &old_program);
-//    glUseProgram(shadowbox_quilt_to_screen_shader);
+
+    GLuint shader = shadowbox_quilt_to_screen_shader;
+    glUseProgram(shader);
+    glUniform1i(glGetUniformLocation(shader, "screenTex"), 0);
+
 check_gl_errors(__LINE__);
-    glClearColor(0.0f, 0.5f, 0.0f, 1.0f);
+//    glClearColor(0.0f, 0.5f, 0.0f, 1.0f);
 //    glClear(GL_COLOR_BUFFER_BIT);
 check_gl_errors(__LINE__);
     glEnable(GL_TEXTURE_2D);
@@ -241,6 +375,59 @@ check_gl_errors(__LINE__);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+
+
+
+    // glPixelStorei(GL_UNPACK_ROW_LENGTH,   0);
+    // glPixelStorei(GL_UNPACK_IMAGE_HEIGHT, 0);
+    // glPixelStorei(GL_UNPACK_SKIP_ROWS,    0);
+    // glPixelStorei(GL_UNPACK_SKIP_PIXELS,  0);
+    // glPixelStorei(GL_UNPACK_SKIP_IMAGES,  0);
+    // glPixelStorei(GL_UNPACK_ALIGNMENT,    4);
+    int total_x = shadowbox_tile_size_x * shadowbox_tiles_x;
+    int total_y = shadowbox_tile_size_y * shadowbox_tiles_y;
+    if (1)
+    {
+        if (0)
+        {
+            // initialize to something obnoxious for debugging
+            uint32_t* pix = (uint32_t*)shadowbox_quilt_tex32_pixels;
+            for (int y = 0; y < total_y; ++y)
+            {
+                for (int x = 0; x < total_x; ++x)
+                {
+                    uint32_t* dst = pix + (y * total_x) + x;
+                    uint32_t color = 0xff0000ff;
+                    if ((y / 256) & 1)
+                        color |= 0x00ff0000;
+                    if ((x / 256) & 1)
+                        color |= 0x0000ff00;
+                    *dst = color;
+                }
+            }
+            // for (uint64_t i = 0; i < total_bytes; ++i)
+            //     ((uint8_t*)shadowbox_quilt_tex32_pixels)[i] = 0xff;//(uint8_t)i;
+        }
+        if (0)
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 
+                         total_x,
+                         total_y,
+                         0, GL_RGBA, GL_UNSIGNED_BYTE, shadowbox_quilt_tex32_pixels);
+        }
+    }
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
+
+
+
 
     SDL_GetWindowSize(main_sdl_window, &win_width, &win_height);
 //    printf("win size %dx%d\n", win_width, win_height);
@@ -265,14 +452,14 @@ check_gl_errors(__LINE__);
     glVertex3f( qsize,  qsize, 0.0f);
     glTexCoord2f(1.0f, 0.0f);
     glVertex3f( qsize, -qsize, 0.0f);
-    glTexCoord2f(1.0f, 0.0f);
-    glVertex3f( qsize, -qsize, 0.0f);
-    glTexCoord2f(1.0f, 1.0f);
-    glVertex3f( qsize,  qsize, 0.0f);
-    glTexCoord2f(0.0f, 1.0f);
-    glVertex3f(-qsize,  qsize, 0.0f);
-    glTexCoord2f(0.0f, 0.0f);
-    glVertex3f(-qsize, -qsize, 0.0f);
+    // glTexCoord2f(1.0f, 0.0f);
+    // glVertex3f( qsize, -qsize, 0.0f);
+    // glTexCoord2f(1.0f, 1.0f);
+    // glVertex3f( qsize,  qsize, 0.0f);
+    // glTexCoord2f(0.0f, 1.0f);
+    // glVertex3f(-qsize,  qsize, 0.0f);
+    // glTexCoord2f(0.0f, 0.0f);
+    // glVertex3f(-qsize, -qsize, 0.0f);
     glEnd();
 
     if (0) {
