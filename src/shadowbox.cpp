@@ -157,11 +157,12 @@ static const char* quilt_to_screen_pshader =
 "varying vec2 src_uv;\n"
 "varying vec2 texCoords;\n"
 "uniform sampler2D screenTex;\n"
+//"layout(location = 0) out vec3 color;\n"
 "void main()\n"
 "{\n"
-"   vec3 color = texture2D(screenTex, texCoords.xy).rgb;\n"
-"   color += vec3(0.5 * texCoords.xy, 0.0);\n"
-"   gl_FragColor = vec4(color, 1.0);\n"
+"   vec3 out_color = texture2D(screenTex, texCoords.xy).rgb;\n"
+"   out_color += vec3(0.5 * texCoords.xy, 0.0);\n"
+"   gl_FragColor = vec4(out_color, 1.0);\n"
 "}\n"
 "";
 
@@ -259,10 +260,10 @@ void toggle_shadowbox()
         	glGenTextures(1, &shadowbox_quilt_tex_id);
 #if 1
             // The depth buffer
-            glBindRenderbuffer(GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, total_x, total_y);
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
-            glBindRenderbuffer(GL_RENDERBUFFER, 0);
+//            glBindRenderbuffer(GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
+//            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, total_x, total_y);
+//            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
+//            glBindRenderbuffer(GL_RENDERBUFFER, 0);
 #endif
 
 
@@ -295,6 +296,7 @@ void toggle_shadowbox()
                          total_x,
                          total_y,
                          0, GL_RGBA, GL_UNSIGNED_BYTE, shadowbox_quilt_tex32_pixels);
+            glBindTexture(GL_TEXTURE_2D, 0);
 	        // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, 
          //                 shadowbox_tile_size_x * shadowbox_tiles_x,
          //                 shadowbox_tile_size_y * shadowbox_tiles_y,
@@ -317,8 +319,40 @@ void toggle_shadowbox()
 
 void shadowbox_begin_render_quilt()
 {
-    return;
+//    return;
+
+//printf(" bindings: %d %d %d\n", shadowbox_quilt_framebuffer, shadowbox_quilt_tex_id, shadowbox_quilt_depthrenderbuffer);
+check_gl_errors(__LINE__);
+glBindFramebuffer(GL_FRAMEBUFFER, shadowbox_quilt_framebuffer);
+glBindTexture(GL_TEXTURE_2D, shadowbox_quilt_tex_id);
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1024, 768, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, 1024, 768, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, 0);
+
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+glBindRenderbuffer(GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
+check_gl_errors(__LINE__);
+glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 768);
+check_gl_errors(__LINE__);
+glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
+check_gl_errors(__LINE__);
+//glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, shadowbox_quilt_tex_id, 0);
+glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, shadowbox_quilt_tex_id, 0);
+check_gl_errors(__LINE__);
+GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+check_gl_errors(__LINE__);
+glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+check_gl_errors(__LINE__);
+glBindFramebuffer(GL_FRAMEBUFFER, shadowbox_quilt_framebuffer);
+check_gl_errors(__LINE__);
+glViewport(0,0,1024,768);
+check_gl_errors(__LINE__);
+
+#if 0
 #ifdef SHADOWBOX_OFFSCREEN
+    glBindTexture(GL_TEXTURE_2D, shadowbox_quilt_tex_id);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 check_gl_errors(__LINE__);
     glBindFramebuffer(GL_FRAMEBUFFER, shadowbox_quilt_framebuffer);
 check_gl_errors(__LINE__);
@@ -336,6 +370,7 @@ check_gl_errors(__LINE__);
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         printf("ERROR: quilt framebuffer is not ok: 0x%x\n", (int)glCheckFramebufferStatus(GL_FRAMEBUFFER));
 glDisable(GL_DEPTH_TEST);
+#endif
 #endif
 }
 
