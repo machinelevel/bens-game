@@ -32,6 +32,7 @@ int  shadowbox_tiles_x = 1;
 int  shadowbox_tiles_y = 1;
 int  shadowbox_tile_size_x = 0;
 int  shadowbox_tile_size_y = 0;
+void* shadowbox_quilt_tex32_pixels = NULL;
 bool shadowbox_initialized = false;
 GLuint shadowbox_quilt_framebuffer = 0;
 GLuint shadowbox_quilt_to_screen_shader = 0;
@@ -168,10 +169,18 @@ void toggle_shadowbox()
 	        // Make the offscreen texture
 	        glActiveTexture(GL_TEXTURE0);
 	        glBindTexture(GL_TEXTURE_2D, shadowbox_quilt_tex_id);
-	        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, 
-	        			 shadowbox_tile_size_x * shadowbox_tiles_x,
-	        			 shadowbox_tile_size_y * shadowbox_tiles_y,
-	                     0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, NULL);
+            int total_x = shadowbox_tile_size_x * shadowbox_tiles_x;
+            int total_y = shadowbox_tile_size_y * shadowbox_tiles_y;
+            shadowbox_quilt_tex32_pixels = malloc(total_x * total_y * 4); // TODO: Might not need this buffer at all.
+            printf("Quilt texture is %dx%d, %d MB\n", total_x, total_y, (total_x * total_y * 4) / 1048576);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 
+                         total_x,
+                         total_y,
+                         0, GL_RGB, GL_UNSIGNED_BYTE, shadowbox_quilt_tex32_pixels);
+	        // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, 
+         //                 shadowbox_tile_size_x * shadowbox_tiles_x,
+         //                 shadowbox_tile_size_y * shadowbox_tiles_y,
+	        //              0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, NULL);
 #endif
 		}
 	}
@@ -188,6 +197,7 @@ void toggle_shadowbox()
 
 void shadowbox_begin_render_quilt()
 {
+    return;
 #ifdef SHADOWBOX_OFFSCREEN
 check_gl_errors(__LINE__);
     glBindFramebuffer(GL_FRAMEBUFFER, shadowbox_quilt_framebuffer);
@@ -201,6 +211,7 @@ check_gl_errors(__LINE__);
 
 void shadowbox_end_render_quilt()
 {
+    return;
 check_gl_errors(__LINE__);
     glFinish();
 check_gl_errors(__LINE__);
@@ -220,7 +231,7 @@ void shadowbox_draw_quilt_to_screen()
 //    glUseProgram(shadowbox_quilt_to_screen_shader);
 check_gl_errors(__LINE__);
     glClearColor(0.0f, 0.5f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+//    glClear(GL_COLOR_BUFFER_BIT);
 check_gl_errors(__LINE__);
     glEnable(GL_TEXTURE_2D);
     glActiveTexture(GL_TEXTURE0);
@@ -304,7 +315,7 @@ check_gl_errors(__LINE__);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glUseProgram(old_program);
-    glDisable(GL_TEXTURE_2D);
+//    glDisable(GL_TEXTURE_2D);
 check_gl_errors(__LINE__);
 
     extern int32    MainWindowSize[2];
