@@ -550,6 +550,7 @@ void main_event_loop()
     {
     	float dt = DeltaTime;
     	float udt = UnscaledDeltaTime;
+			shadowbox_begin_render_quilt();
     	for (int v = 0; v < shadowbox_tiles_y; ++v)
     	{
 	    	for (int h = 0; h < shadowbox_tiles_x; ++h)
@@ -561,6 +562,8 @@ void main_event_loop()
 	    }
   		DeltaTime = dt;
   		UnscaledDeltaTime = udt;
+  		shadowbox_end_render_quilt();
+			shadowbox_draw_quilt_to_screen();
     }
   	else
   	{

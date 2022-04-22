@@ -116,7 +116,6 @@ void PreDraw(int tile_h, int tile_v)
 	{
 		if (tile_h == 0 && tile_v == 0)
 		{
-			shadowbox_begin_render_quilt();
 			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 		}
 		float w = (float)MainWindowSize[0] / shadowbox_tiles_x;
@@ -366,9 +365,11 @@ void DrawMainWindow(int tile_h, int tile_v)
 	PostDraw();
 	if (do_shadowbox_quilt)
 	{
-		if (tile_h == shadowbox_tiles_x - 1
-			&& tile_v == shadowbox_tiles_y - 1)
-			SDL_GL_SwapWindow(main_sdl_window);
+		glFinish();
+		glFlush();
+		// if (tile_h == shadowbox_tiles_x - 1
+		// 	&& tile_v == shadowbox_tiles_y - 1)
+		// 	SDL_GL_SwapWindow(main_sdl_window);
 	}
 	else
 	{

@@ -3,6 +3,8 @@
 
 void toggle_shadowbox();
 void shadowbox_begin_render_quilt();
+void shadowbox_end_render_quilt();
+void shadowbox_draw_quilt_to_screen();
 
 extern bool do_shadowbox_quilt;
 extern int  shadowbox_tiles_x;

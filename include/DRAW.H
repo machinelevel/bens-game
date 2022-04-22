@@ -33,3 +33,10 @@ void PostDraw(void);
 void DrawMainWindow(int tile_h, int tile_v);
 void DrawQuickModel(quickModel *qm);
 void DrawChiaQuad(pfVec3 *verts, pfVec3 extrusion, int layers, int numFins, float alphaScale, uint32 flags);
+
+inline void check_gl_errors(int line)
+{
+    GLenum err;
+    while((err = glGetError()) != GL_NO_ERROR)
+        printf("**** GL Error 0x%x at line %d\n", err, line);
+}
