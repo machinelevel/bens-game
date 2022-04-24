@@ -16,6 +16,7 @@
 #include "glider.h"
 #include "cellport.h"
 #include "boss.h"
+#include "shadowbox.h"
 
 pfVec3		GlobalCameraTarget;
 pfMatrix	GlobalCameraMatrix;
@@ -213,7 +214,19 @@ void SetGLViewToCamera(void)
 	pfMakeIdentMat(BasicCorrectionMat);
 	pfSetVec3(BasicCorrectionMat[PF_Y], 0.0f, 0.0f,-1.0f);
 	pfSetVec3(BasicCorrectionMat[PF_Z], 0.0f, 1.0f, 0.0f);
-	pfInvertOrthoMat(m, GlobalCameraMatrix);
+	if (do_shadowbox_quilt)
+	{
+		// Move the camera left/right to generate parallax
+		float parallax_dist = -0.5f;
+		pfMatrix cm;
+		pfCopyMat(cm, GlobalCameraMatrix);
+		pfAddScaledVec3(cm[PF_T], cm[PF_T], shadowbox_left_right * parallax_dist, cm[PF_X]);
+		pfInvertOrthoMat(m, cm);
+	}
+	else
+	{
+		pfInvertOrthoMat(m, GlobalCameraMatrix);
+	}
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf((const float *)BasicCorrectionMat);
 	glMultMatrixf((const float *)m);
