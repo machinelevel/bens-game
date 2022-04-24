@@ -2176,6 +2176,11 @@ void Slides::DrawStandardUIButton(int buttonID, bool mirror)
 			hudQuickRect(x, y, w, h);
 		} else {
 			UseLibTexture(buttonRects[buttonID].tex);
+			// for 3D displays, pop the active button out a bit
+			float parallax_scale = 25.0f;
+			float parallax = shadowbox_left_right * parallax_scale;
+			if (mCurrentButton == buttonID)
+				x += parallax;
 			if (mirror) hudQuickRect(x+w, y, -w, h);
 			else hudQuickRect(x, y, w, h);
 			if (mCurrentButton == buttonID) {
@@ -2476,6 +2481,9 @@ void Slides::Draw(void)
 		DrawBackFan();
 	}
 
+	float parallax_scale = 25.0f;
+	float parallax = shadowbox_left_right * parallax_scale;
+
 	/**** now some special drawing? ****/
 	switch (mCurrentSlide) {
 		case SLIDE_PRE_TITLE:
@@ -2683,10 +2691,10 @@ void Slides::Draw(void)
 		case SLIDE_BUTTON_CHOOSE1PLAYER:
 		case SLIDE_BUTTON_CHOOSE2PLAYER:
 			if (gNumPlayers == 1) {
-				px1 = px2 = 320.0f;
+				px1 = px2 = 320.0f + parallax;
 			} else {
-				px1 = 180.0f;
-				px2 = 460.0f;
+				px1 = 180.0f + parallax;
+				px2 = 460.0f + parallax;
 			}
 
 			glEnable(GL_BLEND);
@@ -2780,9 +2788,9 @@ void Slides::Draw(void)
 				px2 = 640-100;
 
 //vvvvv				DrawSelectionModel(0, px1, 300, 70.0f);
-				DrawSelectionModel(0, px1, 400, 70.0f);
+				DrawSelectionModel(0, px1 + parallax, 400, 70.0f);
 				if (gNumPlayers == 2) {
-					DrawSelectionModel(1, px2, 400, 70.0f);
+					DrawSelectionModel(1, px2 + parallax, 400, 70.0f);
 				}
 
 				gFontSys->BeginDraw(FONT_ID_MAIN);
