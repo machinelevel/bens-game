@@ -138,18 +138,14 @@ GLuint compile_one_shader(const char* vshader, const char* pshader)
 
 static const char* quilt_to_screen_vshader = "\
 attribute vec4 vertPos_data;\n\
-attribute vec2 vertDepth_data;\n\
 \n\
 varying vec2 src_uv;\n\
 varying vec2 texCoords;\n\
-varying vec2 sprite_depth_and_px_scale;\n\
 \n\
 void main()\n\
 {\n\
-    gl_Position = vec4(vertPos_data.xy, 0.0, 1.0);\n\
-    src_uv = vertPos_data.zw;\n\
-    texCoords = vec2((vertPos_data.x + 1.0) * 0.5, 1.0 - (vertPos_data.y + 1.0) * 0.5);\n\
-    sprite_depth_and_px_scale = vertDepth_data;\n\
+    gl_Position = ftransform();\n\
+    texCoords = gl_MultiTexCoord0.st;\n\
 }";
 
 static const char* quilt_to_screen_pshader = 
@@ -157,11 +153,10 @@ static const char* quilt_to_screen_pshader =
 "varying vec2 src_uv;\n"
 "varying vec2 texCoords;\n"
 "uniform sampler2D screenTex;\n"
-//"layout(location = 0) out vec3 color;\n"
 "void main()\n"
 "{\n"
 "   vec3 out_color = texture2D(screenTex, texCoords.xy).rgb;\n"
-"   out_color += vec3(0.5 * texCoords.xy, 0.0);\n"
+//"   out_color += vec3(0.5 * texCoords.xy, 0.0);\n"
 "   gl_FragColor = vec4(out_color, 1.0);\n"
 "}\n"
 "";
@@ -213,8 +208,8 @@ void toggle_shadowbox()
         printf("Activating shadowbox mode.\n");
 		shadowbox_tiles_x = 9;
 		shadowbox_tiles_y = 5;
-		shadowbox_tile_size_x = 512;
-		shadowbox_tile_size_y = 640;
+		shadowbox_tile_size_x = 512;//512;
+		shadowbox_tile_size_y = 640;//640;
 
 		if (!shadowbox_initialized)
 		{
@@ -322,17 +317,20 @@ void shadowbox_begin_render_quilt()
 //    return;
 
 //printf(" bindings: %d %d %d\n", shadowbox_quilt_framebuffer, shadowbox_quilt_tex_id, shadowbox_quilt_depthrenderbuffer);
+int total_x = shadowbox_tile_size_x * shadowbox_tiles_x;
+int total_y = shadowbox_tile_size_y * shadowbox_tiles_y;
+
 check_gl_errors(__LINE__);
 glBindFramebuffer(GL_FRAMEBUFFER, shadowbox_quilt_framebuffer);
 glBindTexture(GL_TEXTURE_2D, shadowbox_quilt_tex_id);
-glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1024, 768, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, total_x, total_y, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, 1024, 768, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, 0);
 
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 glBindRenderbuffer(GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
 check_gl_errors(__LINE__);
-glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1024, 768);
+glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, total_x, total_y);
 check_gl_errors(__LINE__);
 glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
 check_gl_errors(__LINE__);
@@ -345,7 +343,7 @@ glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
 check_gl_errors(__LINE__);
 glBindFramebuffer(GL_FRAMEBUFFER, shadowbox_quilt_framebuffer);
 check_gl_errors(__LINE__);
-glViewport(0,0,1024,768);
+glViewport(0,0,total_x, total_y);
 check_gl_errors(__LINE__);
 
 #if 0
@@ -478,7 +476,7 @@ check_gl_errors(__LINE__);
 
     glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
     glBegin(GL_QUADS);
-    float qsize = 0.5f;
+    float qsize = 1.0f;
     glTexCoord2f(0.0f, 0.0f);
     glVertex3f(-qsize, -qsize, 0.0f);
     glTexCoord2f(0.0f, 1.0f);

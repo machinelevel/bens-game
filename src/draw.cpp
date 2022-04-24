@@ -118,8 +118,8 @@ void PreDraw(int tile_h, int tile_v)
 		{
 			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 		}
-		float w = (float)MainWindowSize[0] / shadowbox_tiles_x;
-		float h = (float)MainWindowSize[1] / shadowbox_tiles_y;
+		float w = shadowbox_tile_size_x;
+		float h = shadowbox_tile_size_y;
 		glViewport(w * tile_h, h * tile_v, w, h);
 	}
 	else
