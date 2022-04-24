@@ -136,27 +136,50 @@ GLuint compile_one_shader(const char* vshader, const char* pshader)
     return shader_program;
 }
 
-static const char* quilt_to_screen_vshader = "\
-attribute vec4 vertPos_data;\n\
-\n\
-varying vec2 src_uv;\n\
-varying vec2 texCoords;\n\
-\n\
-void main()\n\
-{\n\
-    gl_Position = ftransform();\n\
-    texCoords = gl_MultiTexCoord0.st;\n\
-}";
+static const char* quilt_to_screen_vshader = 
+"attribute vec4 vertPos_data;\n"
+"\n"
+"varying vec2 z_interp;\n"
+"varying vec2 texCoords;\n"
+"const float pitch = 246.848;\n"
+"const float tilt = 0.184957;\n"
+"\n"
+"void main()\n"
+"{\n"
+"    gl_Position = ftransform();\n"
+"    texCoords = gl_MultiTexCoord0.st;\n"
+"    z_interp = (vec2(gl_Position.x, -gl_Position.y) + 1.0) * 0.5;\n"
+"    z_interp = vec2(z_interp.x, z_interp.y * tilt) * pitch;\n"
+"}";
 
-static const char* quilt_to_screen_pshader = 
+static const char* quilt_to_screen_pshader1 = 
 "#line 155\n"
-"varying vec2 src_uv;\n"
+"varying vec2 z_interp;\n"
 "varying vec2 texCoords;\n"
 "uniform sampler2D screenTex;\n"
 "void main()\n"
 "{\n"
 "   vec3 out_color = texture2D(screenTex, texCoords.xy).rgb;\n"
 //"   out_color += vec3(0.5 * texCoords.xy, 0.0);\n"
+"   gl_FragColor = vec4(out_color, 1.0);\n"
+"}\n"
+"";
+
+static const char* quilt_to_screen_pshader = 
+"#line 155\n"
+"varying vec2 z_interp;\n"
+"varying vec2 texCoords;\n"
+"uniform sampler2D screenTex;\n"
+"const float pitch = 246.848;\n"
+"const float center = -0.05;\n" // maybe 0.0 or -0.05?
+"const float subp = 0.000217014;\n"
+"const vec3 subp_step = vec3(0.0, 1.0, 2.0) * subp * pitch - center;"
+"void main()\n"
+"{\n"
+"   vec3 z = fract(z_interp.x + subp_step + z_interp.y);\n"
+"   vec3 out_color = texture2D(screenTex, texCoords.xy).rgb;\n"
+//"   out_color += vec3(0.5 * texCoords.xy, 0.0);\n"
+"   out_color += vec3(z.y, 1.0-z.y, 0.0);\n"
 "   gl_FragColor = vec4(out_color, 1.0);\n"
 "}\n"
 "";
