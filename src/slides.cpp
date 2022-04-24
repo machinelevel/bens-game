@@ -32,6 +32,7 @@
 #include "sound.h"
 #include "font.h"
 #include "translation.h"
+#include "shadowbox.h"
 
 extern SDL_Window* main_sdl_window;
 
@@ -2926,6 +2927,7 @@ void Slides::Draw(void)
 			w = 200;
 			h = 100;
 			if (mCurrentButton == BUTTON_ID_BIGPLAY) {
+				x += shadowbox_left_right * 50.0f;
 				mWobbleScale += 4.0f * UnscaledDeltaTime;
 				mWobbleX += UnscaledDeltaTime * 100.0f;
 				mWobbleY += UnscaledDeltaTime * 100.0f;

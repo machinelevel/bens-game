@@ -555,6 +555,9 @@ void main_event_loop()
     	{
 	    	for (int h = 0; h < shadowbox_tiles_x; ++h)
 	    	{
+	    		int tile_id = h + v * shadowbox_tiles_x;
+	    		float tile_0_to_1 = (float)tile_id / (float)(shadowbox_tiles_x * shadowbox_tiles_y);
+	    		shadowbox_left_right = (tile_0_to_1 - 0.5f) * 2.0f;
 	    		DrawMainWindow(h, v);
 	    		DeltaTime = 0.0f;
 	    		UnscaledDeltaTime = 0.0f;

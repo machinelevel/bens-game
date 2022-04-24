@@ -32,6 +32,8 @@ int  shadowbox_tiles_x = 1;
 int  shadowbox_tiles_y = 1;
 int  shadowbox_tile_size_x = 0;
 int  shadowbox_tile_size_y = 0;
+float shadowbox_left_right = 0.0f;
+
 void* shadowbox_quilt_tex32_pixels = NULL;
 bool shadowbox_initialized = false;
 GLuint shadowbox_quilt_framebuffer = 0;
@@ -152,20 +154,33 @@ static const char* quilt_to_screen_vshader =
 "    z_interp = vec2(z_interp.x, z_interp.y * tilt) * pitch;\n"
 "}";
 
-static const char* quilt_to_screen_pshader1 = 
+static const char* quilt_to_screen_pshader = 
 "#line 155\n"
 "varying vec2 z_interp;\n"
 "varying vec2 texCoords;\n"
 "uniform sampler2D screenTex;\n"
+"const float pitch = 246.848;\n"
+"const float center = -0.05;\n" // maybe 0.0 or -0.05?
+"const float subp = 0.000217014;\n"
+"const vec3 subp_step = vec3(0.0, 1.0, 2.0) * subp * pitch - center;\n"
+"const vec2 num_tiles = vec2(9.0, 5.0);\n"
+"const vec2 inv_num_tiles = 1.0 / num_tiles;\n"
 "void main()\n"
 "{\n"
-"   vec3 out_color = texture2D(screenTex, texCoords.xy).rgb;\n"
+"   vec3 z = fract(z_interp.x + subp_step + z_interp.y);\n"
+"   vec2 uv = texCoords * inv_num_tiles;\n"
+"   vec3 tile_id = floor(z * num_tiles.x * num_tiles.y);\n"
+"   vec3 tilex = inv_num_tiles.x * mod(tile_id, num_tiles.x);\n"
+"   vec3 tiley = inv_num_tiles.y * floor(tile_id / num_tiles.x);\n"
+"   uv.x += tilex.y;\n"
+"   uv.y += tiley.y;\n"
+"   vec3 out_color = texture2D(screenTex, uv).rgb;\n"
 //"   out_color += vec3(0.5 * texCoords.xy, 0.0);\n"
 "   gl_FragColor = vec4(out_color, 1.0);\n"
 "}\n"
 "";
 
-static const char* quilt_to_screen_pshader = 
+static const char* quilt_to_screen_pshader_tint_test = 
 "#line 155\n"
 "varying vec2 z_interp;\n"
 "varying vec2 texCoords;\n"
