@@ -207,6 +207,7 @@ xxxxxxxx 1   B  Final HUD
 #include "hud.h"
 #include "tsufile.h"
 #include "translation.h"
+#include "shadowbox.h"
 
 char	    *main_window_title = TRANSLATE(TXT_Bens_Game);
 uint64_t    main_sdl_window_flags = SDL_WINDOW_OPENGL;
@@ -545,8 +546,33 @@ void main_event_loop()
       }
     }
 //printf("time: %f\n", NowTime);
-	DrawMainWindow();
-	HandleIdle();
+    if (do_shadowbox_quilt)
+    {
+    	float dt = DeltaTime;
+    	float udt = UnscaledDeltaTime;
+			shadowbox_begin_render_quilt();
+    	for (int v = 0; v < shadowbox_tiles_y; ++v)
+    	{
+	    	for (int h = 0; h < shadowbox_tiles_x; ++h)
+	    	{
+	    		int tile_id = h + v * shadowbox_tiles_x;
+	    		float tile_0_to_1 = (float)tile_id / (float)(shadowbox_tiles_x * shadowbox_tiles_y);
+	    		shadowbox_left_right = (tile_0_to_1 - 0.5f) * 2.0f;
+	    		DrawMainWindow(h, v);
+	    		DeltaTime = 0.0f;
+	    		UnscaledDeltaTime = 0.0f;
+	    	}
+	    }
+  		DeltaTime = dt;
+  		UnscaledDeltaTime = udt;
+  		shadowbox_end_render_quilt();
+			shadowbox_draw_quilt_to_screen();
+    }
+  	else
+  	{
+			DrawMainWindow(0, 0);
+		}
+		HandleIdle();
 
     // glViewport(0, 0, WinWidth, WinHeight);
     // glClearColor(0.2f, 0.0f, 0.2f, 1.0f);

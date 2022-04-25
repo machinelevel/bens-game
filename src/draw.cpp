@@ -23,6 +23,7 @@
 #include "slides.h"
 #include "random.h"
 #include "sound.h"
+#include "shadowbox.h"
 
 extern SDL_Window* main_sdl_window;
 
@@ -103,20 +104,33 @@ void AppDrawText(GLuint x, GLuint y, GLuint scale, char* format, ...)
     glMatrixMode(GL_MODELVIEW);
 }
 
-void PreDraw(void)
+void PreDraw(int tile_h, int tile_v)
 {
 	float	aspect;
 	extern int32	MainWindowSize[2];
 
 //	glClearColor( 0.0F, 0.0F, 0.2F, 1.0F );
 	glClearColor( 0.0F, 0.0F, 0.0F, 1.0F );
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
+	if (do_shadowbox_quilt)
+	{
+		if (tile_h == 0 && tile_v == 0)
+		{
+			glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+		}
+		float w = shadowbox_tile_size_x;
+		float h = shadowbox_tile_size_y;
+		glViewport(w * tile_h, h * tile_v, w, h);
+	}
+	else
+	{
+		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+		glViewport(0, 0, MainWindowSize[0], MainWindowSize[1]);
+	}
 	/* set viewing projection */
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	
-	glViewport(0, 0, MainWindowSize[0], MainWindowSize[1]);
+
 	aspect = ((float)MainWindowSize[1]) / ((float)MainWindowSize[0]);
 	glFrustum(-0.5f, 0.5f, -0.5f*aspect, 0.5f*aspect, 1.0f, 1000.0f);
 
@@ -313,10 +327,10 @@ void PostDraw(void)
 //	AppDrawText(100, 100, 20, "%.0f Hz", (float)LastFrameRate);
 }
 
-void DrawMainWindow(void)
+void DrawMainWindow(int tile_h, int tile_v)
 {
 	Glider	*g;
-	PreDraw();
+	PreDraw(tile_h, tile_v);
 
 	if (gGameMode == GAME_MODE_SLIDES) {
 		gSlides->Draw();
@@ -349,6 +363,17 @@ void DrawMainWindow(void)
 	}
 
 	PostDraw();
-	SDL_GL_SwapWindow(main_sdl_window);
+	if (do_shadowbox_quilt)
+	{
+		glFinish();
+		glFlush();
+		// if (tile_h == shadowbox_tiles_x - 1
+		// 	&& tile_v == shadowbox_tiles_y - 1)
+		// 	SDL_GL_SwapWindow(main_sdl_window);
+	}
+	else
+	{
+		SDL_GL_SwapWindow(main_sdl_window);
+	}
 }
 

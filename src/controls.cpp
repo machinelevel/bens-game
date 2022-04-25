@@ -22,6 +22,7 @@
 #include "slides.h"
 #include "font.h"
 #include "translation.h"
+#include "shadowbox.h"
 
 char	KeysDown[256];
 char	PrevKeysDown[256];
@@ -109,6 +110,9 @@ void HandleKeyboard(unsigned char key, int x, int y)
 //			gSlides->NewGame(2);
 //		}
 //		break;
+	case '\\':
+		toggle_shadowbox();
+		break;
 	case 'C':
 		if (0) {
 			if (gGameMode != GAME_MODE_SLIDES) {
