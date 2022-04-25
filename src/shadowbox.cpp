@@ -3,27 +3,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
 #include <GL/gl.h>
-#include <stdarg.h>
-#include <time.h>
-#include "genincludes.h"
-#include "camera.h"
-#include "timer.h"
-#include "guideway.h"
-#include "texture.h"
+#include "types.h"
+#include "foxpf.h"
 #include "draw.h"
-#include "cellgrid.h"
-#include "cellport.h"
-#include "glider.h"
-#include "projectile.h"
-#include "hud.h"
-#include "boss.h"
-#include "glowSpark.h"
-#include "bubble.h"
-#include "slides.h"
-#include "random.h"
-#include "sound.h"
-
-#define SHADOWBOX_OFFSCREEN
+#include "shadowbox.h"
 
 extern SDL_Window* main_sdl_window;
 
@@ -58,6 +41,9 @@ static PFNGLBINDBUFFERPROC        glBindBuffer       ;
 static PFNGLGENBUFFERSPROC        glGenBuffers       ;
 static PFNGLBUFFERDATAPROC        glBufferData       ;
 static PFNGLUNIFORM1IPROC         glUniform1i        ;
+static PFNGLUNIFORM1FPROC         glUniform1f        ;
+static PFNGLUNIFORM2FPROC         glUniform2f        ;
+static PFNGLUNIFORM3FPROC         glUniform3f        ;
 static PFNGLUNIFORM4FPROC         glUniform4f        ;
 static PFNGLGETUNIFORMLOCATIONPROC      glGetUniformLocation      ;
 static PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray ;
@@ -143,8 +129,9 @@ static const char* quilt_to_screen_vshader =
 "\n"
 "varying vec2 z_interp;\n"
 "varying vec2 texCoords;\n"
-"const float pitch = 246.848;\n"
-"const float tilt = 0.184957;\n"
+"uniform sampler2D screenTex;\n"
+"uniform float pitch;\n"
+"uniform float tilt;\n"
 "\n"
 "void main()\n"
 "{\n"
@@ -160,12 +147,13 @@ static const char* quilt_to_screen_pshader_1sample =
 "varying vec2 z_interp;\n"
 "varying vec2 texCoords;\n"
 "uniform sampler2D screenTex;\n"
-"const float pitch = 246.848;\n"
-"const float center = -0.05;\n" // maybe 0.0 or -0.05?
-"const float subp = 0.000217014;\n"
-"const vec3 subp_step = vec3(0.0, 1.0, 2.0) * subp * pitch - center;\n"
-"const vec2 num_tiles = vec2(9.0, 5.0);\n"
-"const vec2 inv_num_tiles = 1.0 / num_tiles;\n"
+"uniform sampler2D screenTex;\n"
+"uniform float pitch;\n"
+"uniform float center;\n"
+"uniform float subp;\n"
+"uniform vec3 subp_step;\n"
+"uniform vec2 num_tiles;\n"
+"uniform vec2 inv_num_tiles;\n"
 "void main()\n"
 "{\n"
 "   vec3 z = fract(z_interp.x + subp_step + z_interp.y);\n"
@@ -186,12 +174,12 @@ static const char* quilt_to_screen_pshader_3samples =
 "varying vec2 z_interp;\n"
 "varying vec2 texCoords;\n"
 "uniform sampler2D screenTex;\n"
-"const float pitch = 246.848;\n"
-"const float center = -0.05;\n" // maybe 0.0 or -0.05?
-"const float subp = 0.000217014;\n"
-"const vec3 subp_step = vec3(0.0, 1.0, 2.0) * subp * pitch - center;\n"
-"const vec2 num_tiles = vec2(9.0, 5.0);\n"
-"const vec2 inv_num_tiles = 1.0 / num_tiles;\n"
+"uniform float pitch;\n"
+"uniform float center;\n"
+"uniform float subp;\n"
+"uniform vec3 subp_step;\n"
+"uniform vec2 num_tiles;\n"
+"uniform vec2 inv_num_tiles;\n"
 "void main()\n"
 "{\n"
 "   vec3 z = fract(z_interp.x + subp_step + z_interp.y);\n"
@@ -211,10 +199,10 @@ static const char* quilt_to_screen_pshader_tint_test =
 "varying vec2 z_interp;\n"
 "varying vec2 texCoords;\n"
 "uniform sampler2D screenTex;\n"
-"const float pitch = 246.848;\n"
-"const float center = -0.05;\n" // maybe 0.0 or -0.05?
-"const float subp = 0.000217014;\n"
-"const vec3 subp_step = vec3(0.0, 1.0, 2.0) * subp * pitch - center;"
+"uniform float pitch;\n"
+"uniform float center;\n"
+"uniform float subp;\n"
+"uniform vec3 subp_step;\n"
 "void main()\n"
 "{\n"
 "   vec3 z = fract(z_interp.x + subp_step + z_interp.y);\n"
@@ -270,10 +258,10 @@ void toggle_shadowbox()
 
 
         printf("Activating shadowbox mode.\n");
-		shadowbox_tiles_x = 9;
-		shadowbox_tiles_y = 5;
-		shadowbox_tile_size_x = 512;//512;
-		shadowbox_tile_size_y = 640;//640;
+		shadowbox_tiles_x = SHADOWBOX_TILES_X;
+		shadowbox_tiles_y = SHADOWBOX_TILES_Y;
+		shadowbox_tile_size_x = 256;//512;
+		shadowbox_tile_size_y = 320;//640;
 
 		if (!shadowbox_initialized)
 		{
@@ -294,6 +282,9 @@ void toggle_shadowbox()
             glGenBuffers        = (PFNGLGENBUFFERSPROC)       SDL_GL_GetProcAddress("glGenBuffers");
             glBufferData        = (PFNGLBUFFERDATAPROC)       SDL_GL_GetProcAddress("glBufferData");
             glUniform1i         = (PFNGLUNIFORM1IPROC)        SDL_GL_GetProcAddress("glUniform1i");
+            glUniform1f         = (PFNGLUNIFORM1FPROC)        SDL_GL_GetProcAddress("glUniform1f");
+            glUniform2f         = (PFNGLUNIFORM2FPROC)        SDL_GL_GetProcAddress("glUniform2f");
+            glUniform3f         = (PFNGLUNIFORM3FPROC)        SDL_GL_GetProcAddress("glUniform3f");
             glUniform4f         = (PFNGLUNIFORM4FPROC)        SDL_GL_GetProcAddress("glUniform4f");
             glGetUniformLocation      = (PFNGLGETUNIFORMLOCATIONPROC)      SDL_GL_GetProcAddress("glGetUniformLocation");
             glEnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAYPROC) SDL_GL_GetProcAddress("glEnableVertexAttribArray");
@@ -311,20 +302,12 @@ void toggle_shadowbox()
             glBindRenderbuffer     = (PFNGLBINDRENDERBUFFERPROC)            SDL_GL_GetProcAddress("glBindRenderbuffer");
             glRenderbufferStorage     = (PFNGLRENDERBUFFERSTORAGEPROC)         SDL_GL_GetProcAddress("glRenderbufferStorage");
             glFramebufferRenderbuffer     = (PFNGLFRAMEBUFFERRENDERBUFFERPROC)     SDL_GL_GetProcAddress("glFramebufferRenderbuffer");
-#ifdef SHADOWBOX_OFFSCREEN
+
             int total_x = shadowbox_tile_size_x * shadowbox_tiles_x;
             int total_y = shadowbox_tile_size_y * shadowbox_tiles_y;
 	        glGenFramebuffers(1, &shadowbox_quilt_framebuffer);
             glGenRenderbuffers(1, &shadowbox_quilt_depthrenderbuffer);
         	glGenTextures(1, &shadowbox_quilt_tex_id);
-#if 1
-            // The depth buffer
-//            glBindRenderbuffer(GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
-//            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, total_x, total_y);
-//            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
-//            glBindRenderbuffer(GL_RENDERBUFFER, 0);
-#endif
-
 
 	        glGenBuffers(1, &shadowbox_quilt_quad_vbo);
 	        // Make the offscreen texture
@@ -347,21 +330,18 @@ void toggle_shadowbox()
                     *dst = color;
                 }
             }
-            // initialize to something obnoxious for debugging
-            // for (uint64_t i = 0; i < total_bytes; ++i)
-            //     ((uint8_t*)shadowbox_quilt_tex32_pixels)[i] = (uint8_t)i;
             printf("Quilt texture is %dx%d, %d MB\n", total_x, total_y, (total_x * total_y * 4) / 1048576);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 
                          total_x,
                          total_y,
                          0, GL_RGBA, GL_UNSIGNED_BYTE, shadowbox_quilt_tex32_pixels);
             glBindTexture(GL_TEXTURE_2D, 0);
-	        // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, 
-         //                 shadowbox_tile_size_x * shadowbox_tiles_x,
-         //                 shadowbox_tile_size_y * shadowbox_tiles_y,
-	        //              0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, NULL);
+#if SHADOWBOX_SHADER_SAMPLES == 3
             shadowbox_quilt_to_screen_shader = compile_one_shader(quilt_to_screen_vshader,
                                                                   quilt_to_screen_pshader_3samples);
+#else
+            shadowbox_quilt_to_screen_shader = compile_one_shader(quilt_to_screen_vshader,
+                                                                  quilt_to_screen_pshader_1samples);
 #endif
 		}
 	}
@@ -370,6 +350,7 @@ void toggle_shadowbox()
         printf("Deactivating shadowbox mode.\n");
 		shadowbox_tiles_x = 1;
 		shadowbox_tiles_y = 1;
+        shadowbox_left_right = 0.0f;
         SDL_SetWindowBordered(win, SDL_TRUE);
         SDL_SetWindowPosition(win, restore_window_bounds.x, restore_window_bounds.y);
         SDL_SetWindowSize(win, restore_window_bounds.w, restore_window_bounds.h);
@@ -378,79 +359,47 @@ void toggle_shadowbox()
 
 void shadowbox_begin_render_quilt()
 {
-//    return;
+    int total_x = shadowbox_tile_size_x * shadowbox_tiles_x;
+    int total_y = shadowbox_tile_size_y * shadowbox_tiles_y;
 
-//printf(" bindings: %d %d %d\n", shadowbox_quilt_framebuffer, shadowbox_quilt_tex_id, shadowbox_quilt_depthrenderbuffer);
-int total_x = shadowbox_tile_size_x * shadowbox_tiles_x;
-int total_y = shadowbox_tile_size_y * shadowbox_tiles_y;
-
-check_gl_errors(__LINE__);
-glBindFramebuffer(GL_FRAMEBUFFER, shadowbox_quilt_framebuffer);
-glBindTexture(GL_TEXTURE_2D, shadowbox_quilt_tex_id);
-glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, total_x, total_y, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, 1024, 768, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, 0);
-
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-glBindRenderbuffer(GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
-check_gl_errors(__LINE__);
-glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, total_x, total_y);
-check_gl_errors(__LINE__);
-glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
-check_gl_errors(__LINE__);
-//glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, shadowbox_quilt_tex_id, 0);
-glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, shadowbox_quilt_tex_id, 0);
-check_gl_errors(__LINE__);
-GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-check_gl_errors(__LINE__);
-glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
-check_gl_errors(__LINE__);
-glBindFramebuffer(GL_FRAMEBUFFER, shadowbox_quilt_framebuffer);
-check_gl_errors(__LINE__);
-glViewport(0,0,total_x, total_y);
-check_gl_errors(__LINE__);
-
-#if 0
-#ifdef SHADOWBOX_OFFSCREEN
+    check_gl_errors(__LINE__);
+    glBindFramebuffer(GL_FRAMEBUFFER, shadowbox_quilt_framebuffer);
     glBindTexture(GL_TEXTURE_2D, shadowbox_quilt_tex_id);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, total_x, total_y, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-check_gl_errors(__LINE__);
-    glBindFramebuffer(GL_FRAMEBUFFER, shadowbox_quilt_framebuffer);
-check_gl_errors(__LINE__);
-        // glBindRenderbuffer(GL_RENDERBUFFER, quilt->depthrenderbuffer);
-        // glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, quilt->depthrenderbuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
+    check_gl_errors(__LINE__);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, total_x, total_y);
+    check_gl_errors(__LINE__);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
+    check_gl_errors(__LINE__);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, shadowbox_quilt_tex_id, 0);
-    GLenum draw_buffers[1] = {GL_COLOR_ATTACHMENT0};
-    if (1)
-    {
-        glBindRenderbuffer(GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadowbox_quilt_depthrenderbuffer);
-    }
-    glDrawBuffers(1, draw_buffers); // "1" is the size of draw_buffers
-check_gl_errors(__LINE__);
-    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        printf("ERROR: quilt framebuffer is not ok: 0x%x\n", (int)glCheckFramebufferStatus(GL_FRAMEBUFFER));
-glDisable(GL_DEPTH_TEST);
-#endif
-#endif
+    check_gl_errors(__LINE__);
+    GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+    check_gl_errors(__LINE__);
+    glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+    check_gl_errors(__LINE__);
+    glBindFramebuffer(GL_FRAMEBUFFER, shadowbox_quilt_framebuffer);
+    check_gl_errors(__LINE__);
+    glViewport(0,0,total_x, total_y);
+    check_gl_errors(__LINE__);
 }
 
 void shadowbox_end_render_quilt()
 {
-//    return;
-check_gl_errors(__LINE__);
+    check_gl_errors(__LINE__);
     glFinish();
-check_gl_errors(__LINE__);
+    check_gl_errors(__LINE__);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-check_gl_errors(__LINE__);
+    check_gl_errors(__LINE__);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
-check_gl_errors(__LINE__);
+    check_gl_errors(__LINE__);
 }
 
 void shadowbox_draw_quilt_to_screen()
 {
-#ifdef SHADOWBOX_OFFSCREEN
     int win_width, win_height;
     GLint old_program;
     glDisable(GL_BLEND);
@@ -458,85 +407,71 @@ void shadowbox_draw_quilt_to_screen()
 
     GLuint shader = shadowbox_quilt_to_screen_shader;
     glUseProgram(shader);
+    // These values are specific to each LGP, and are provided by the driver.
+    // TODO: load these from a config file.
+    float pitch = SHADOWBOX_PITCH;
+    float tilt = SHADOWBOX_TILT;
+    float center = SHADOWBOX_CENTER;
+    float subp = SHADOWBOX_SUBP;
     glUniform1i(glGetUniformLocation(shader, "screenTex"), 0);
+    glUniform1f(glGetUniformLocation(shader, "pitch"), pitch);
+    glUniform1f(glGetUniformLocation(shader, "tilt"), tilt);
+    glUniform1f(glGetUniformLocation(shader, "center"), center);
+    glUniform1f(glGetUniformLocation(shader, "subp"), subp);
+    glUniform3f(glGetUniformLocation(shader, "subp_step"), 0.0 * subp * pitch - center,
+                                                           1.0 * subp * pitch - center,
+                                                           2.0 * subp * pitch - center);
+    glUniform2f(glGetUniformLocation(shader, "num_tiles"), shadowbox_tiles_x, shadowbox_tiles_y);
+    glUniform2f(glGetUniformLocation(shader, "inv_num_tiles"), 1.0f / shadowbox_tiles_x, 1.0f / shadowbox_tiles_y);
 
-check_gl_errors(__LINE__);
-//    glClearColor(0.0f, 0.5f, 0.0f, 1.0f);
-//    glClear(GL_COLOR_BUFFER_BIT);
-check_gl_errors(__LINE__);
+    check_gl_errors(__LINE__);
     glEnable(GL_TEXTURE_2D);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, shadowbox_quilt_tex_id);
-//    glUniform1i(glGetUniformLocation(shadowbox_quilt_to_screen_shader, "tx_color"), 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-
-
-
-    // glPixelStorei(GL_UNPACK_ROW_LENGTH,   0);
-    // glPixelStorei(GL_UNPACK_IMAGE_HEIGHT, 0);
-    // glPixelStorei(GL_UNPACK_SKIP_ROWS,    0);
-    // glPixelStorei(GL_UNPACK_SKIP_PIXELS,  0);
-    // glPixelStorei(GL_UNPACK_SKIP_IMAGES,  0);
-    // glPixelStorei(GL_UNPACK_ALIGNMENT,    4);
     int total_x = shadowbox_tile_size_x * shadowbox_tiles_x;
     int total_y = shadowbox_tile_size_y * shadowbox_tiles_y;
-    if (1)
+    if (0)
     {
-        if (0)
+        // initialize to something obnoxious for debugging
+        uint32_t* pix = (uint32_t*)shadowbox_quilt_tex32_pixels;
+        for (int y = 0; y < total_y; ++y)
         {
-            // initialize to something obnoxious for debugging
-            uint32_t* pix = (uint32_t*)shadowbox_quilt_tex32_pixels;
-            for (int y = 0; y < total_y; ++y)
+            for (int x = 0; x < total_x; ++x)
             {
-                for (int x = 0; x < total_x; ++x)
-                {
-                    uint32_t* dst = pix + (y * total_x) + x;
-                    uint32_t color = 0xff0000ff;
-                    if ((y / 256) & 1)
-                        color |= 0x00ff0000;
-                    if ((x / 256) & 1)
-                        color |= 0x0000ff00;
-                    *dst = color;
-                }
+                uint32_t* dst = pix + (y * total_x) + x;
+                uint32_t color = 0xff0000ff;
+                if ((y / 256) & 1)
+                    color |= 0x00ff0000;
+                if ((x / 256) & 1)
+                    color |= 0x0000ff00;
+                *dst = color;
             }
-            // for (uint64_t i = 0; i < total_bytes; ++i)
-            //     ((uint8_t*)shadowbox_quilt_tex32_pixels)[i] = 0xff;//(uint8_t)i;
         }
-        if (0)
-        {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 
-                         total_x,
-                         total_y,
-                         0, GL_RGBA, GL_UNSIGNED_BYTE, shadowbox_quilt_tex32_pixels);
-        }
+    }
+    if (0)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 
+                     total_x,
+                     total_y,
+                     0, GL_RGBA, GL_UNSIGNED_BYTE, shadowbox_quilt_tex32_pixels);
     }
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-
-
-
-
-
     SDL_GetWindowSize(main_sdl_window, &win_width, &win_height);
-//    printf("win size %dx%d\n", win_width, win_height);
     glViewport(0.0, 0.0, win_width, win_height);
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-//    glOrtho(0, win_width, 0, win_height, -1, 1);
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
-check_gl_errors(__LINE__);
+    check_gl_errors(__LINE__);
 
     glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
     glBegin(GL_QUADS);
@@ -549,43 +484,7 @@ check_gl_errors(__LINE__);
     glVertex3f( qsize,  qsize, 0.0f);
     glTexCoord2f(1.0f, 0.0f);
     glVertex3f( qsize, -qsize, 0.0f);
-    // glTexCoord2f(1.0f, 0.0f);
-    // glVertex3f( qsize, -qsize, 0.0f);
-    // glTexCoord2f(1.0f, 1.0f);
-    // glVertex3f( qsize,  qsize, 0.0f);
-    // glTexCoord2f(0.0f, 1.0f);
-    // glVertex3f(-qsize,  qsize, 0.0f);
-    // glTexCoord2f(0.0f, 0.0f);
-    // glVertex3f(-qsize, -qsize, 0.0f);
     glEnd();
-
-    if (0) {
-        const float vsc = 1.0f;
-        static float verts_full[] = {
-                              // pos
-                              vsc*-1.0f, vsc*-1.0f, 0.0f,
-                              vsc*1.0, vsc*-1.0, 0.0f,
-                              vsc*1.0, vsc*1.0, 0.0f,
-                              vsc*-1.0, vsc*1.0, 0.0f,
-                              // u,v,pfar,pnear
-                               0.0f, 0.0f, 0, 0,
-                               1.0f, 0.0f, 0, 0,
-                               1.0f, 1.0f, 0, 0,
-                               0.0f, 1.0f, 0, 0};
-        glBindBuffer(GL_ARRAY_BUFFER, shadowbox_quilt_quad_vbo);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
-        float* uvfn = verts_full + 3*4;
-        uvfn[0*4+0] = 0.0; uvfn[0*4+1] = 1.0;
-        uvfn[1*4+0] = 1.0; uvfn[1*4+1] = 1.0;
-        uvfn[2*4+0] = 1.0; uvfn[2*4+1] = 0.0;
-        uvfn[3*4+0] = 0.0; uvfn[3*4+1] = 0.0;
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (const void*)(0));
-        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (const void*)(4 * 3 * sizeof(float)));  
-        glBufferData(GL_ARRAY_BUFFER, sizeof(verts_full), verts_full, GL_STATIC_DRAW);
-        glDrawArrays(GL_QUADS, 0, 4);
-    }
 
     glFinish();
     glFlush();
@@ -599,11 +498,9 @@ check_gl_errors(__LINE__);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glUseProgram(old_program);
-//    glDisable(GL_TEXTURE_2D);
-check_gl_errors(__LINE__);
+    check_gl_errors(__LINE__);
 
     extern int32    MainWindowSize[2];
     glViewport(0.0, 0.0, MainWindowSize[0], MainWindowSize[1]);
-check_gl_errors(__LINE__);
-#endif
+    check_gl_errors(__LINE__);
 }

@@ -1,6 +1,21 @@
 #ifndef _SHADOWBOX_H_
 #define _SHADOWBOX_H_
 
+// Quality settings
+#define SHADOWBOX_TILES_X        6  // The number of columns in the quilt
+#define SHADOWBOX_TILES_Y        5  // The number of rows in the quilt
+#define SHADOWBOX_TILE_SIZE_X  256  // Width in pixels of each tile
+#define SHADOWBOX_TILE_SIZE_Y  320  // Height in pixels of each tile
+#define SHADOWBOX_SHADER_SAMPLES 3  // 1 for low-quality sampling, 3 for high-quality
+
+// These settings are specific to each LGP unit
+// They're provided by the driver software.
+#define SHADOWBOX_PITCH 246.848f
+#define SHADOWBOX_TILT    0.184957f
+#define SHADOWBOX_CENTER -0.05f
+#define SHADOWBOX_SUBP    0.000217014f
+
+
 void toggle_shadowbox();
 void shadowbox_begin_render_quilt();
 void shadowbox_end_render_quilt();
