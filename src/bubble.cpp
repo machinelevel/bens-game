@@ -24,7 +24,7 @@
 #include "bubble.h"
 #include "cellport.h"
 #include "sound.h"
-#include "BOSS.h"
+#include "boss.h"
 
 Bubble	*Bubble::msFirst = NULL;
 float	gShieldFlickerTimer = 0.0f;
