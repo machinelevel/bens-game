@@ -563,6 +563,7 @@ void main_event_loop()
 	    		UnscaledDeltaTime = 0.0f;
 	    	}
 	    }
+	    shadowbox_left_right = 0.0f;
   		DeltaTime = dt;
   		UnscaledDeltaTime = udt;
   		shadowbox_end_render_quilt();
