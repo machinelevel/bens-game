@@ -195,7 +195,7 @@ xxxxxxxx 1   B  Final HUD
 #include "draw.h"
 #include "controls.h"
 #include "cellgrid.h"
-#include "CellPort.h"
+#include "cellport.h"
 #include "glider.h"
 #include "projectile.h"
 #include "boss.h"
