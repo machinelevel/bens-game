@@ -2,10 +2,10 @@
 #define _SHADOWBOX_H_
 
 // Quality settings
-#define SHADOWBOX_TILES_X        6  // The number of columns in the quilt
+#define SHADOWBOX_TILES_X        9  // The number of columns in the quilt
 #define SHADOWBOX_TILES_Y        5  // The number of rows in the quilt
-#define SHADOWBOX_TILE_SIZE_X  256  // Width in pixels of each tile
-#define SHADOWBOX_TILE_SIZE_Y  320  // Height in pixels of each tile
+#define SHADOWBOX_TILE_SIZE_X  512  // Width in pixels of each tile
+#define SHADOWBOX_TILE_SIZE_Y  640  // Height in pixels of each tile
 #define SHADOWBOX_SHADER_SAMPLES 3  // 1 for low-quality sampling, 3 for high-quality
 
 // These settings are specific to each LGP unit
