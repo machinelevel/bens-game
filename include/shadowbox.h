@@ -20,6 +20,8 @@ void toggle_shadowbox();
 void shadowbox_begin_render_quilt();
 void shadowbox_end_render_quilt();
 void shadowbox_draw_quilt_to_screen();
+void shadowbox_save_screen();
+void shadowbox_save_quilt();
 
 extern bool do_shadowbox_quilt;
 extern int  shadowbox_tiles_x;
@@ -27,4 +29,5 @@ extern int  shadowbox_tiles_y;
 extern int  shadowbox_tile_size_x;
 extern int  shadowbox_tile_size_y;
 extern float shadowbox_left_right;
+extern bool shadowbox_save_screens;
 #endif _SHADOWBOX_H_
