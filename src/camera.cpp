@@ -217,10 +217,20 @@ void SetGLViewToCamera(void)
 	if (do_shadowbox_quilt)
 	{
 		// Move the camera left/right to generate parallax
-		float parallax_dist = -0.5f;
+		float parallax_near_dist = -0.5f;
+		float parallax_far_dist = 0.05f;
 		pfMatrix cm;
 		pfCopyMat(cm, GlobalCameraMatrix);
-		pfAddScaledVec3(cm[PF_T], cm[PF_T], shadowbox_left_right * parallax_dist, cm[PF_X]);
+		// Move the camera over to create parallax
+		pfAddScaledVec3(cm[PF_T], cm[PF_T], shadowbox_left_right * parallax_near_dist, cm[PF_X]);
+
+		// Rotate the camera so that infinitely-far objets get displaced
+		// Without this, the "far" objects land on the "zero plane" in the middle of the device.
+		pfAddScaledVec3(cm[PF_Y], cm[PF_Y], shadowbox_left_right * parallax_far_dist, cm[PF_X]);
+		pfNormalizeVec3(cm[PF_Y]);
+		pfCrossVec3(cm[PF_X], cm[PF_Y], cm[PF_Z]);
+		pfNormalizeVec3(cm[PF_X]);
+
 		pfInvertOrthoMat(m, cm);
 	}
 	else

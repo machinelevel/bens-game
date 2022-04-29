@@ -113,6 +113,10 @@ void HandleKeyboard(unsigned char key, int x, int y)
 	case '\\':
 		toggle_shadowbox();
 		break;
+	case 's':
+		if (0)
+			shadowbox_save_screens = true;
+		break;
 	case 'C':
 		if (0) {
 			if (gGameMode != GAME_MODE_SLIDES) {

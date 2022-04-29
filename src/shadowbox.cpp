@@ -16,6 +16,7 @@ int  shadowbox_tiles_y = 1;
 int  shadowbox_tile_size_x = 0;
 int  shadowbox_tile_size_y = 0;
 float shadowbox_left_right = 0.0f;
+bool shadowbox_save_screens = false;
 
 void* shadowbox_quilt_tex32_pixels = NULL;
 bool shadowbox_initialized = false;
@@ -391,6 +392,10 @@ void shadowbox_end_render_quilt()
 {
     check_gl_errors(__LINE__);
     glFinish();
+
+    if (shadowbox_save_screens)
+        shadowbox_save_quilt();
+
     check_gl_errors(__LINE__);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     check_gl_errors(__LINE__);
@@ -488,6 +493,13 @@ void shadowbox_draw_quilt_to_screen()
 
     glFinish();
     glFlush();
+
+    if (shadowbox_save_screens)
+    {
+        shadowbox_save_screen();
+        shadowbox_save_screens = false;
+    }
+
     SDL_GL_SwapWindow(main_sdl_window);
 
     glPopMatrix();
@@ -504,3 +516,43 @@ void shadowbox_draw_quilt_to_screen()
     glViewport(0.0, 0.0, MainWindowSize[0], MainWindowSize[1]);
     check_gl_errors(__LINE__);
 }
+
+void shadowbox_save_screen()
+{
+    const char* image_file_name = "save_screen.bmp";
+    int capture_w = 1536;
+    int capture_h = 2048;
+    glViewport(0, 0, capture_w, capture_h);
+
+    SDL_Surface* capture_plate = SDL_CreateRGBSurface(SDL_SWSURFACE, capture_w, capture_h, 32,
+                                                  0x000000ff,
+                                                  0x0000ff00,
+                                                  0x00ff0000,
+                                                  0xff000000);
+    SDL_LockSurface(capture_plate);
+    glReadPixels(0, 0, capture_w, capture_h, GL_RGBA, GL_UNSIGNED_BYTE, capture_plate->pixels);
+    printf("Saving BMP image: %s\n", image_file_name);
+    SDL_SaveBMP(capture_plate, image_file_name);
+    SDL_UnlockSurface(capture_plate);
+    SDL_FreeSurface(capture_plate);
+}
+void shadowbox_save_quilt()
+{
+    const char* image_file_name = "save_quilt.bmp";
+    int capture_w = shadowbox_tiles_x * shadowbox_tile_size_x;
+    int capture_h = shadowbox_tiles_y * shadowbox_tile_size_y;
+    glViewport(0, 0, capture_w, capture_h);
+
+    SDL_Surface* capture_plate = SDL_CreateRGBSurface(SDL_SWSURFACE, capture_w, capture_h, 32,
+                                                  0x000000ff,
+                                                  0x0000ff00,
+                                                  0x00ff0000,
+                                                  0xff000000);
+    SDL_LockSurface(capture_plate);
+    glReadPixels(0, 0, capture_w, capture_h, GL_RGBA, GL_UNSIGNED_BYTE, capture_plate->pixels);
+    printf("Saving BMP image: %s\n", image_file_name);
+    SDL_SaveBMP(capture_plate, image_file_name);
+    SDL_UnlockSurface(capture_plate);
+    SDL_FreeSurface(capture_plate);
+}
+
